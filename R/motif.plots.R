@@ -1,4 +1,4 @@
-#' plot.snp
+#' snp.plot
 #'
 #' Plots for a specific snp, strand and motif the PWM scores and Kumasaka
 #' scores if provided for Ref vs Alt
@@ -19,12 +19,12 @@
 #' @examples
 #' #import data from TFBS.findR
 #' snp <- data[data$SNP %in% "rs74813460"]
-#' plot.snp(snp, method="both", motif="MYC::MAX", strand="+")
+#' snp.plot(snp, method="both", motif="MYC::MAX", strand="+")
 #'
 #' @import ggplot2
 #' @importFrom cowplot plot_grid
-#' @export plot.snp
-plot.snp <- function(snp, method='both', motif="MEF2A", strand=c("-", "+")){
+#' @export
+snp.plot <- function(snp, method='both', motif="MEF2A", strand=c("-", "+")){
   library(ggplot2)
   library(cowplot)
 

@@ -9,7 +9,7 @@ Description: TFBSfindR analysis sequences in vcf or fasta files
     and reference scores for TF binding are compared to investigate
     variants that change these TFBS, either by desrupting a motif or
     by creating one.
-License: GPL-3
+LICENSE: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1

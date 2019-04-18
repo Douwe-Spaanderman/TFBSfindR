@@ -1,4 +1,4 @@
-#' update.GRanges
+#' Granges.update
 #'
 #' Updates the data to make snp-motif combination readable
 #' As well as sorting position at which snp changes motif.
@@ -31,9 +31,9 @@
 #'
 #' @examples
 #' #data is 1 Granges object from TFBS.findR
-#' data <- update.GRanges(data, threshold=0.1)
-#' @export update.Granges
-update.GRanges <- function(data, threshold=0.1){
+#' data <- Granges.update(data, threshold=0.1)
+#' @export
+GRanges.update <- function(data, threshold=0.1){
   Delta.Kuma <- data$Kuma.alt.score[[1]] - data$Kuma.ref.score[[1]]
   pwm.length <- 40-length(Delta.Kuma)
   data.c <- c()
@@ -65,11 +65,11 @@ update.GRanges <- function(data, threshold=0.1){
   }
 }
 
-#' update.window
+#' Window.update
 #'
 #' Update data to a dataframe rather than Granges object
 #'
-#' @param data is a Granges object from \code{update.GRanges}
+#' @param data is a Granges object from \code{Granges.update}
 #' @param digits number of digits to round off
 #'
 #' @return dataframe with the following columns:
@@ -96,11 +96,11 @@ update.GRanges <- function(data, threshold=0.1){
 #'
 #' @examples
 #' #data is 1 Granges object from TFBS.findR
-#' data <- update.GRanges(data, threshold=0.1)
-#' data <- update.window(data, digits=3)
+#' data <- Granges.update(data, threshold=0.1)
+#' data <- Window.update(data, digits=3)
 #'
-#' @export update.window
-update.window <- function(data, digits=3){
+#' @export
+Window.update <- function(data, digits=3){
   data <- as.data.frame(row.names = 1:length(data), data)
   data$seqnames <- as.character(data$seqnames)
   data$strand <- as.character(data$strand)
@@ -112,7 +112,7 @@ update.window <- function(data, digits=3){
   return(data)
 }
 
-#' update.data
+#' data.update
 #'
 #' Updates the data in loop to make snp-motif combination readable
 #' As well as sorting position at which snp changes motif.
@@ -150,13 +150,13 @@ update.window <- function(data, digits=3){
 #'
 #' @examples
 #' #All Grangesobjects from TFBS.findR
-#' data <- update.data(data, threshold=0.1)
+#' data <- data.update(data, threshold=0.1)
 #'
-#' @export update.data
-update.data <- function(data, threshold=0.1){
+#' @export
+data.update <- function(data, threshold=0.1){
   #Update the GrangesList object
-  data <- unlist(GRangesList(unlist(lapply(data, update.GRanges, threshold=threshold), use.names = FALSE)), use.names = FALSE)
+  data <- unlist(GRangesList(unlist(lapply(data, Granges.update, threshold=threshold), use.names = FALSE)), use.names = FALSE)
   data <- data[order(data$Kuma.delta.score, decreasing=TRUE)]
-  data <- update.window(data)
+  data <- Window.update(data)
   return(data)
 }
