@@ -1,4 +1,4 @@
-#' Granges.update
+#' GRanges.update
 #'
 #' Updates the data to make snp-motif combination readable
 #' As well as sorting position at which snp changes motif.
@@ -31,7 +31,7 @@
 #'
 #' @examples
 #' #data is 1 Granges object from TFBS.findR
-#' data <- Granges.update(data, threshold=0.1)
+#' data <- GRanges.update(data, threshold=0.1)
 #' @export
 GRanges.update <- function(data, threshold=0.1){
   Delta.Kuma <- data$Kuma.alt.score[[1]] - data$Kuma.ref.score[[1]]
@@ -69,7 +69,7 @@ GRanges.update <- function(data, threshold=0.1){
 #'
 #' Update data to a dataframe rather than Granges object
 #'
-#' @param data is a Granges object from \code{Granges.update}
+#' @param data is a Granges object from \code{GRanges.update}
 #' @param digits number of digits to round off
 #'
 #' @return dataframe with the following columns:
@@ -96,7 +96,7 @@ GRanges.update <- function(data, threshold=0.1){
 #'
 #' @examples
 #' #data is 1 Granges object from TFBS.findR
-#' data <- Granges.update(data, threshold=0.1)
+#' data <- GRanges.update(data, threshold=0.1)
 #' data <- Window.update(data, digits=3)
 #'
 #' @export
@@ -155,7 +155,7 @@ Window.update <- function(data, digits=3){
 #' @export
 data.update <- function(data, threshold=0.1){
   #Update the GrangesList object
-  data <- unlist(GRangesList(unlist(lapply(data, Granges.update, threshold=threshold), use.names = FALSE)), use.names = FALSE)
+  data <- unlist(GRangesList(unlist(lapply(data, GRanges.update, threshold=threshold), use.names = FALSE)), use.names = FALSE)
   data <- data[order(data$Kuma.delta.score, decreasing=TRUE)]
   data <- Window.update(data)
   return(data)

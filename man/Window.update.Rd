@@ -7,7 +7,7 @@
 Window.update(data, digits = 3)
 }
 \arguments{
-\item{data}{is a Granges object from \code{Granges.update}}
+\item{data}{is a Granges object from \code{GRanges.update}}
 
 \item{digits}{number of digits to round off}
 }
@@ -39,7 +39,7 @@ Update data to a dataframe rather than Granges object
 }
 \examples{
 #data is 1 Granges object from TFBS.findR
-data <- Granges.update(data, threshold=0.1)
+data <- GRanges.update(data, threshold=0.1)
 data <- Window.update(data, digits=3)
 
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/update.data.R
 \name{GRanges.update}
 \alias{GRanges.update}
-\title{Granges.update}
+\title{GRanges.update}
 \usage{
 GRanges.update(data, threshold = 0.1)
 }
@@ -41,5 +41,5 @@ that have low scores, making them less relevant.
 }
 \examples{
 #data is 1 Granges object from TFBS.findR
-data <- Granges.update(data, threshold=0.1)
+data <- GRanges.update(data, threshold=0.1)
 }
