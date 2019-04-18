@@ -19,9 +19,9 @@ a dataset from 1 sample.}
 }
 \value{
 Grangesobject with added columns:
-\list{Kuma.ref.score}{list of posterior probability of transcription
+\item{Kuma.ref.score}{list of posterior probability of transcription
 factor binding score for each position and motif to Ref.sequence}
-\list{Kuma.alt.score}{list of posterior probability of transcription
+\item{Kuma.alt.score}{list of posterior probability of transcription
 factor binding score for each position and motif to Alt.sequence}
 }
 \description{

@@ -23,17 +23,16 @@
 #' \item{Ref.score}{PWM compared score for Reference}
 #' \item{Alt.score}{PWM compared score for Alternative}
 #' \item{Delta.score}{Alt.score - Ref.score}
-#' \list{Kuma.ref.score}{posterior probability of transcription
+#' \item{Kuma.ref.score}{posterior probability of transcription
 #' factor binding for Reference}
-#' \list{Kuma.alt.score}{posterior probability of transcription
+#' \item{Kuma.alt.score}{posterior probability of transcription
 #' factor binding for Alternative}
-#' \list{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
+#' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 #'
 #' @examples
 #' #data is 1 Granges object from TFBS.findR
 #' data <- update.GRanges(data, threshold=0.1)
-#'
-#' @export
+#' @export update.Granges
 update.GRanges <- function(data, threshold=0.1){
   Delta.Kuma <- data$Kuma.alt.score[[1]] - data$Kuma.ref.score[[1]]
   pwm.length <- 40-length(Delta.Kuma)
@@ -89,18 +88,18 @@ update.GRanges <- function(data, threshold=0.1){
 #' \item{Ref.score}{PWM compared score for Reference}
 #' \item{Alt.score}{PWM compared score for Alternative}
 #' \item{Delta.score}{Alt.score - Ref.score}
-#' \list{Kuma.ref.score}{posterior probability of transcription
+#' \item{Kuma.ref.score}{posterior probability of transcription
 #' factor binding for Reference}
-#' \list{Kuma.alt.score}{posterior probability of transcription
+#' \item{Kuma.alt.score}{posterior probability of transcription
 #' factor binding for Alternative}
-#' \list{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
+#' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 #'
 #' @examples
 #' #data is 1 Granges object from TFBS.findR
 #' data <- update.GRanges(data, threshold=0.1)
 #' data <- update.window(data, digits=3)
 #'
-#' @export
+#' @export update.window
 update.window <- function(data, digits=3){
   data <- as.data.frame(row.names = 1:length(data), data)
   data$seqnames <- as.character(data$seqnames)
@@ -143,17 +142,17 @@ update.window <- function(data, digits=3){
 #' \item{Ref.score}{PWM compared score for Reference}
 #' \item{Alt.score}{PWM compared score for Alternative}
 #' \item{Delta.score}{Alt.score - Ref.score}
-#' \list{Kuma.ref.score}{posterior probability of transcription
+#' \item{Kuma.ref.score}{posterior probability of transcription
 #' factor binding for Reference}
-#' \list{Kuma.alt.score}{posterior probability of transcription
+#' \item{Kuma.alt.score}{posterior probability of transcription
 #' factor binding for Alternative}
-#' \list{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
+#' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 #'
 #' @examples
 #' #All Grangesobjects from TFBS.findR
 #' data <- update.data(data, threshold=0.1)
 #'
-#' @export
+#' @export update.data
 update.data <- function(data, threshold=0.1){
   #Update the GrangesList object
   data <- unlist(GRangesList(unlist(lapply(data, update.GRanges, threshold=threshold), use.names = FALSE)), use.names = FALSE)

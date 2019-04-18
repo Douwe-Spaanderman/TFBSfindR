@@ -48,9 +48,9 @@ a Grangesobject with following columns:
 to Ref.sequence}
 \item{Alt.score}{list of PWM compared score for each position
 to Alt.sequence}
-\list{Kuma.ref.score}{list of posterior probability of transcription
+\item{Kuma.ref.score}{list of posterior probability of transcription
 factor binding score for each position and motif to Ref.sequence}
-\list{Kuma.alt.score}{list of posterior probability of transcription
+\item{Kuma.alt.score}{list of posterior probability of transcription
 factor binding score for each position and motif to Alt.sequence}
 }
 \description{

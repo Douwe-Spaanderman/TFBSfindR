@@ -209,9 +209,9 @@ analyse.pwm <- function(data, motiflist, motif.type="PFM", background=c(A=0.25, 
 #' a dataset from 1 sample.
 #'
 #' @return Grangesobject with added columns:
-#' \list{Kuma.ref.score}{list of posterior probability of transcription
+#' \item{Kuma.ref.score}{list of posterior probability of transcription
 #' factor binding score for each position and motif to Ref.sequence}
-#' \list{Kuma.alt.score}{list of posterior probability of transcription
+#' \item{Kuma.alt.score}{list of posterior probability of transcription
 #' factor binding score for each position and motif to Alt.sequence}
 #'
 #' @examples
@@ -314,9 +314,9 @@ kumasaka.score <- function(data, background=c(A=0.25, C=0.25, G=0.25, T=0.25), p
 #' to Ref.sequence}
 #' \item{Alt.score}{list of PWM compared score for each position
 #' to Alt.sequence}
-#' \list{Kuma.ref.score}{list of posterior probability of transcription
+#' \item{Kuma.ref.score}{list of posterior probability of transcription
 #' factor binding score for each position and motif to Ref.sequence}
-#' \list{Kuma.alt.score}{list of posterior probability of transcription
+#' \item{Kuma.alt.score}{list of posterior probability of transcription
 #' factor binding score for each position and motif to Alt.sequence}
 #'
 #' @examples

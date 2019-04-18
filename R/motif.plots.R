@@ -22,8 +22,8 @@
 #' plot.snp(snp, method="both", motif="MYC::MAX", strand="+")
 #'
 #' @import ggplot2
-#' @import cowplot
-#' @export
+#' @importFrom cowplot plot_grid
+#' @export plot.snp
 plot.snp <- function(snp, method='both', motif="MEF2A", strand=c("-", "+")){
   library(ggplot2)
   library(cowplot)

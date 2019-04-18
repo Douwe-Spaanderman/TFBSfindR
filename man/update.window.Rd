@@ -28,11 +28,11 @@ dataframe with the following columns:
 \item{Ref.score}{PWM compared score for Reference}
 \item{Alt.score}{PWM compared score for Alternative}
 \item{Delta.score}{Alt.score - Ref.score}
-\list{Kuma.ref.score}{posterior probability of transcription
+\item{Kuma.ref.score}{posterior probability of transcription
 factor binding for Reference}
-\list{Kuma.alt.score}{posterior probability of transcription
+\item{Kuma.alt.score}{posterior probability of transcription
 factor binding for Alternative}
-\list{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
+\item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 }
 \description{
 Update data to a dataframe rather than Granges object
