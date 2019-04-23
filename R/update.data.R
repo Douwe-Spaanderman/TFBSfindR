@@ -29,9 +29,6 @@
 #' factor binding for Alternative}
 #' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 #'
-#' @examples
-#' #data is 1 Granges object from TFBS.findR
-#' data <- GRanges.update(data, threshold=0.1)
 #' @export
 GRanges.update <- function(data, threshold=0.1){
   Delta.Kuma <- data$Kuma.alt.score[[1]] - data$Kuma.ref.score[[1]]
@@ -94,11 +91,6 @@ GRanges.update <- function(data, threshold=0.1){
 #' factor binding for Alternative}
 #' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 #'
-#' @examples
-#' #data is 1 Granges object from TFBS.findR
-#' data <- GRanges.update(data, threshold=0.1)
-#' data <- Window.update(data, digits=3)
-#'
 #' @export
 Window.update <- function(data, digits=3){
   data <- as.data.frame(row.names = 1:length(data), data)
@@ -147,10 +139,6 @@ Window.update <- function(data, digits=3){
 #' \item{Kuma.alt.score}{posterior probability of transcription
 #' factor binding for Alternative}
 #' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
-#'
-#' @examples
-#' #All Grangesobjects from TFBS.findR
-#' data <- data.update(data, threshold=0.1)
 #'
 #' @export
 data.update <- function(data, threshold=0.1){

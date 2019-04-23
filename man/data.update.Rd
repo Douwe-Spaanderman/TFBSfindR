@@ -44,8 +44,3 @@ that have low scores, making them less relevant.
 Lastly, the data will be transformed from a GRanges object
 to a dataframe.
 }
-\examples{
-#All Grangesobjects from TFBS.findR
-data <- data.update(data, threshold=0.1)
-
-}

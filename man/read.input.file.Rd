@@ -34,13 +34,12 @@ Read and strip input file and make ready for motif analysis
 }
 \examples{
 #Load input.files
-input <- "/../HG01241.vcf.gz"
-ATAC.snps <- '/../ATACpeaksMerged.bed'
+input <- system.file("extdata", "variant.dataset.fasta" , package = "TFBSfindR")
 #Load reference genome
 library(BSgenome.Hsapiens.UCSC.hg19)
 ref.genome <- BSgenome.Hsapiens.UCSC.hg19
 #Get sample.name from input file
-sample.name <- strsplit(input, split="[./_]+")[[1]][2]
-data <- read.input.file(input, ref.genome, sample.name = sample.name, ATAC.only = ATAC.snps)
+sample.name <- "example.dataset"
+data <- read.input.file(input, ref.genome, sample.name = sample.name, ATAC.only = FALSE)
 
 }

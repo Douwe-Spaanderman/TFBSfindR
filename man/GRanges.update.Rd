@@ -39,7 +39,3 @@ As well as sorting position at which snp changes motif.
 Threshold can be used to filter out snp-motif changes
 that have low scores, making them less relevant.
 }
-\examples{
-#data is 1 Granges object from TFBS.findR
-data <- GRanges.update(data, threshold=0.1)
-}

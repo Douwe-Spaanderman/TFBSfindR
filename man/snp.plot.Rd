@@ -28,9 +28,3 @@ scores and delta Kumasaka scores
 Plots for a specific snp, strand and motif the PWM scores and Kumasaka
 scores if provided for Ref vs Alt
 }
-\examples{
-#import data from TFBS.findR
-snp <- data[data$SNP \%in\% "rs74813460"]
-snp.plot(snp, method="both", motif="MYC::MAX", strand="+")
-
-}

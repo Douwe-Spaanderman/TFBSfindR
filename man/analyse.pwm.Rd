@@ -35,13 +35,3 @@ as a score list is provided for each individual pwm
 Analyse position weight matrix to Grangesobject from \code{read.input.file}.
 This is only to do analyses in loop for each motif in motiflist.
 }
-\examples{
-#single Grangesobject (single SNP)
-data <- read.input.file(path, ref.genome)[1,]
-#Here multiple human motifs are provided
-library(MotifDb)
-JASPARCORE <- query(MotifDb, 'JASPAR_CORE')
-JASPARCORE <- query(JASPARCORE, 'hsapiens')
-data <- analyse.pwm(data, motiflist=JASPARCORE, motif.type="PPM")
-
-}

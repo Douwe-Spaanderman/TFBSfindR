@@ -16,11 +16,6 @@
 #' @return two or four plots with PWM scores, delta PWM scores, Kumasaka
 #' scores and delta Kumasaka scores
 #'
-#' @examples
-#' #import data from TFBS.findR
-#' snp <- data[data$SNP %in% "rs74813460"]
-#' snp.plot(snp, method="both", motif="MYC::MAX", strand="+")
-#'
 #' @import ggplot2
 #' @importFrom cowplot plot_grid
 #' @export

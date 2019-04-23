@@ -25,15 +25,6 @@
 #'
 #' @return transformed matrix of x based on the method selected
 #'
-#' @examples
-#' #load Motif database and specify ppm
-#' library(MotifDb)
-#' x <- MotifDb[1]
-#' names(x[[1]]) <- names(x)
-#' #if you want pseudocount calculated
-#' names(x[[1]])[2] <- mcols(x)$sequenceCount
-#' x <- to.PWM(x, type="PPM", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount="log.of.reads")
-#'
 #' @export
 to.PWM <- function(x, type="PFM", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.01){
   #PWM calculations are done as https://academic.oup.com/nar/article/31/20/6016/1039515
@@ -92,13 +83,6 @@ to.PWM <- function(x, type="PFM", background=c(A=0.25, C=0.25, G=0.25, T=0.25), 
 #' to Alt.sequence}
 #' Note that the amount of GrangesObject are also *amount of pwms,
 #' as a score list is provided for each individual pwm
-#'
-#' @examples
-#' #single Grangesobject (single SNP)
-#' data <- read.input.file(path, ref.genome)[1,]
-#' #single PMW as discussed before
-#' pwm <- to.PWM(x, type="PPM")
-#' data <- pwm.compare(pwm, data)
 #'
 #' @export
 pwm.compare <- function(pwm, data){
@@ -171,15 +155,6 @@ pwm.compare <- function(pwm, data){
 #' Note that the amount of GrangesObject are also *amount of pwms,
 #' as a score list is provided for each individual pwm
 #'
-#' @examples
-#' #single Grangesobject (single SNP)
-#' data <- read.input.file(path, ref.genome)[1,]
-#' #Here multiple human motifs are provided
-#' library(MotifDb)
-#' JASPARCORE <- query(MotifDb, 'JASPAR_CORE')
-#' JASPARCORE <- query(JASPARCORE, 'hsapiens')
-#' data <- analyse.pwm(data, motiflist=JASPARCORE, motif.type="PPM")
-#'
 #' @export
 analyse.pwm <- function(data, motiflist, motif.type="PFM", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.01){
   #Add names to pwms
@@ -213,11 +188,6 @@ analyse.pwm <- function(data, motiflist, motif.type="PFM", background=c(A=0.25, 
 #' factor binding score for each position and motif to Ref.sequence}
 #' \item{Kuma.alt.score}{list of posterior probability of transcription
 #' factor binding score for each position and motif to Alt.sequence}
-#'
-#' @examples
-#' #data described from analyse.pwm
-#' data <- analyse.pwm(data, motiflist=JASPARCORE, motif.type="PPM")
-#' data <- kumasaka.score(data, background=c(A=0.25, C=0.25, G=0.25, T=0.25), prior=0.1)
 #'
 #' @export
 kumasaka.score <- function(data, background=c(A=0.25, C=0.25, G=0.25, T=0.25), prior=0.1){
@@ -318,23 +288,6 @@ kumasaka.score <- function(data, background=c(A=0.25, C=0.25, G=0.25, T=0.25), p
 #' factor binding score for each position and motif to Ref.sequence}
 #' \item{Kuma.alt.score}{list of posterior probability of transcription
 #' factor binding score for each position and motif to Alt.sequence}
-#'
-#' @examples
-#' #Load input.files
-#' input <- "/../HG01241.vcf.gz"
-#' ATAC.snps <- '/../ATACpeaksMerged.bed'
-#' #Load reference genome
-#' library(BSgenome.Hsapiens.UCSC.hg19)
-#' ref.genome <- BSgenome.Hsapiens.UCSC.hg19
-#' #Get sample.name from input file
-#' sample.name <- strsplit(input, split="[./_]+")[[1]][2]
-#' data <- read.input.file(input, ref.genome, sample.name = sample.name, ATAC.only = ATAC.snps)
-#' #Get list of Motifs
-#' library(MotifDb)
-#' JASPARCORE <- query(MotifDb, 'JASPAR_CORE')
-#' JASPARCORE <- query(JASPARCORE, 'hsapiens')
-#' #Analyse the data with TFBS.findR
-#' data <- TFBS.findR(data, motiflist=JASPARCORE, motif.type="PPM", pseudocount="log.of.reads", prior=0.1, BPPARAM = bpparam)
 #'
 #' @export
 TFBS.findR <- function(data, motiflist, motif.type="PFM", method="both", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.01, prior=0.1, BPPARAM=bpparam()){

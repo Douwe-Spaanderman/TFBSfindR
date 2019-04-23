@@ -32,11 +32,3 @@ based on a 'rolling TF' model. Calculated pwm from
 \code{read.input.file}. PWM are compared to every possible
 position in the sequence, even outside SNP.
 }
-\examples{
-#single Grangesobject (single SNP)
-data <- read.input.file(path, ref.genome)[1,]
-#single PMW as discussed before
-pwm <- to.PWM(x, type="PPM")
-data <- pwm.compare(pwm, data)
-
-}

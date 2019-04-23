@@ -30,9 +30,3 @@ in which posterior probability of transcription factor
 binding is calculated
 MORE INFO
 }
-\examples{
-#data described from analyse.pwm
-data <- analyse.pwm(data, motiflist=JASPARCORE, motif.type="PPM")
-data <- kumasaka.score(data, background=c(A=0.25, C=0.25, G=0.25, T=0.25), prior=0.1)
-
-}

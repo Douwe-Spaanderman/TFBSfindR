@@ -1,0 +1,106 @@
+---
+title: "TFBSfindR: Variant analysis of Transcription Factor Binding Sites"
+author:
+- name: Douwe J. Spaanderman
+  affiliation:
+  - Division of Gene Regulation, the Netherlands Cancer Institute
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  BiocStyle::pdf_document
+abstract: |
+  
+  \newpage
+  
+vignette: >
+  %\VignetteIndexEntry{TFBSfindR: Variant analysis of Transcription Factor Binding Sites}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+library(BiocParallel)
+bpparam = MulticoreParam(workers=1)
+```
+
+# Introduction
+
+# Using TFBSfindR: A quick overview
+Here TFBSfindR is run in its most simplified way. Analysing the example variant dataset provided with TFBSfindR.
+
+``` {r simple.example, eval = FALSE}
+library(TFBSfindR)
+data <- system.file("extdata", "variant.dataset.fasta" , package = "TFBSfindR")
+data <- read.input.file(input=data, ref.genome = BSgenome.Hsapiens.UCSC.hg19)
+data <- TFBS.findR(data, motiflist=MotifDb)
+```
+
+# In depth overview
+## Step 1| Object initialization
+Here we look more into detail in TFBSfindR and it's customizable functions. First we select the example variant dataset provided with TFBSfindR.
+
+```{r load.data, message=FALSE, warning=FALSE, cache=TRUE}
+library(TFBSfindR)
+data <- system.file("extdata", "variant.dataset.fasta" , package = "TFBSfindR")
+```
+
+Next, we select the reference genome, we want to compare the variant data to. 
+```{r load.genome, message=FALSE, warning=FALSE, cache=TRUE}
+library(BSgenome.Hsapiens.UCSC.hg19)
+ref.genome <- BSgenome.Hsapiens.UCSC.hg19
+```
+
+Finally, we give our sample a name, which can be anything, and read the input file and output a GRangesobject. ATAC.only can be used to filter variants in FASTA of there presence in ATAC peaks. In order to do these filter steps, ATAC.only needs to be a string with the location of a BED file, which consists of variants present in ATAC data. For now, we set ATAC.only to FALSE as it is set as default.
+read.input.file outputs a GRangesobject with sample.name, rs number, allel (*|* if phased information is not provided), reference and alternative nucleotide and their sequences including 20 nucleotides before and after the variant.
+
+```{r read.data, message=FALSE, warning=FALSE, cache=TRUE}
+sample.name <- "example.dataset"
+data <- read.input.file(input=data, ref.genome=ref.genome, sample.name = sample.name, ATAC.only = FALSE)
+data
+```
+
+## Step 2| Motif selection
+In order to analyse the variant dataset we have to select motifs to compare our dataset to. A usefull library is MotifDb, which consists of several motif databases. Here we have selected only human motifs provided by the JASPARCORE database. This database consists of 66 well known Transcription factor motifs.
+
+```{r, get.database, message=FALSE, warning=FALSE, cache=TRUE}
+library(MotifDb)
+JASPARCORE <- query(MotifDb, 'JASPAR_CORE')
+JASPARCORE <- query(JASPARCORE, 'hsapiens')
+JASPARCORE
+```
+
+Additionally in our library we provide the hocomoco core position count matrix in text format. This is an example, on how to provide your own motif database (currently only possible in .txt).
+
+```{r, get.database2, message=FALSE, warning=FALSE, cache=TRUE}
+motifs <- system.file("extdata", "hocomoco.core.txt" , package = "TFBSfindR")
+motifs <- read.motif.database(motifs)
+motifs
+```
+
+## Step 3| Motif analysis
+
+Here the motifs from JASPARCORE are compared to our variants ...
+
+```{r analyse.PWM, message=FALSE, warning=FALSE, cache=TRUE}
+data <- TFBS.findR(data, motiflist=JASPARCORE, motif.type="PPM", pseudocount="log.of.reads", prior=0.1, BPPARAM = bpparam)
+```
+
+# Data analysis
+
+some plots ...
+
+```{r plot.example, message=FALSE, warning=FALSE, cache=TRUE}
+snp <- data[data$SNP %in% "rs113663169"]
+snp.plot(snp, method="both", motif="TFAP2A", strand="+")
+```
+
+```{r update.window}
+data <- data.update(data)
+head(data)
+```
+
+# SessionInfo
+```{r sessioninfo}
+sessionInfo()
+```

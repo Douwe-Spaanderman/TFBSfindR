@@ -39,13 +39,3 @@ they analysed was 0.01 and therefore this is also our default.
 Note that if you want to calculate the pseudocount based on the log of
 sequence reads, this param should be set to log.of.reads.
 }
-\examples{
-#load Motif database and specify ppm
-library(MotifDb)
-x <- MotifDb[1]
-names(x[[1]]) <- names(x)
-#if you want pseudocount calculated
-names(x[[1]])[2] <- mcols(x)$sequenceCount
-x <- to.PWM(x, type="PPM", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount="log.of.reads")
-
-}

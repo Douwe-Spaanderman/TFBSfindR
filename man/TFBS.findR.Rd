@@ -69,21 +69,3 @@ and calculates the posterior probability of transcription factor
 binding. These values are than similarly passed as a list to the
 Granges object
 }
-\examples{
-#Load input.files
-input <- "/../HG01241.vcf.gz"
-ATAC.snps <- '/../ATACpeaksMerged.bed'
-#Load reference genome
-library(BSgenome.Hsapiens.UCSC.hg19)
-ref.genome <- BSgenome.Hsapiens.UCSC.hg19
-#Get sample.name from input file
-sample.name <- strsplit(input, split="[./_]+")[[1]][2]
-data <- read.input.file(input, ref.genome, sample.name = sample.name, ATAC.only = ATAC.snps)
-#Get list of Motifs
-library(MotifDb)
-JASPARCORE <- query(MotifDb, 'JASPAR_CORE')
-JASPARCORE <- query(JASPARCORE, 'hsapiens')
-#Analyse the data with TFBS.findR
-data <- TFBS.findR(data, motiflist=JASPARCORE, motif.type="PPM", pseudocount="log.of.reads", prior=0.1, BPPARAM = bpparam)
-
-}
