@@ -32,10 +32,11 @@
 #'
 #' @import Biostrings
 #' @import VariantAnnotation
+#' @import matrixStats
 #' @export
 read.input.file <- function(input.file, ref.genome, sample.name='Unknown', ATAC.only=FALSE){
   if (length(grep(".fasta", input.file)) == 1){
-    library(Biostrings)
+    #library(Biostrings)
     data <- readDNAStringSet(filepath = input.file)
     names <- t(dplyr::bind_cols(lapply(strsplit(names(data), split="|", fixed=TRUE), function(x){return(data.frame(x))})))
     rownames(names) <- 1:length(data)
@@ -76,7 +77,7 @@ read.input.file <- function(input.file, ref.genome, sample.name='Unknown', ATAC.
     data <- data[, c("Sample", "SNP", "Allel", "REF", "ALT", "REF.sequence", "ALT.sequence")]
   }
   if (length(grep(".vcf", input.file)) == 1){
-    library(VariantAnnotation)
+    #library(VariantAnnotation)
     genome <- genome(ref.genome)
     data <- readVcf(input.file, genome)
     rowRanges(data)$Allel <- geno(data)$GT

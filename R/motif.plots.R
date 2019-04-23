@@ -25,8 +25,8 @@
 #' @importFrom cowplot plot_grid
 #' @export
 snp.plot <- function(snp, method='both', motif="MEF2A", strand=c("-", "+")){
-  library(ggplot2)
-  library(cowplot)
+  #library(ggplot2)
+  #library(cowplot)
 
   if(length(motif) > 1){
     stop("please provide only one motif to analyse")
@@ -42,10 +42,10 @@ snp.plot <- function(snp, method='both', motif="MEF2A", strand=c("-", "+")){
                           Ref.score=snp$Ref.score[[1]],
                           Alt.score=snp$Alt.score[[1]],
                           Delta=snp$Alt.score[[1]]-snp$Ref.score[[1]])
-  if (method=="gaf" | method =="both"){
-    snp.frame$Gaf.Ref.score <- snp$Gaf.ref.score[[1]]
-    snp.frame$Gaf.Alt.score <- snp$Gaf.alt.score[[1]]
-    snp.frame$Gaf.Delta <- snp$Gaf.alt.score[[1]]-snp$Gaf.ref.score[[1]]
+  if (method=="Kuma" | method =="both"){
+    snp.frame$Kuma.Ref.score <- snp$Kuma.ref.score[[1]]
+    snp.frame$Kuma.Alt.score <- snp$Kuma.alt.score[[1]]
+    snp.frame$Kuma.Delta <- snp$Kuma.alt.score[[1]]-snp$Kuma.ref.score[[1]]
   }
   snp <- snp.frame
 
@@ -59,17 +59,17 @@ snp.plot <- function(snp, method='both', motif="MEF2A", strand=c("-", "+")){
   } else{
     max.at <- which(snp$Alt.score == max(snp$Alt.score))
   }
-  #+ geom_line(mapping = aes(y=Gaf.Alt.score, colour="red")) + geom_segment(aes(x=max.at.gaf, y= -10, xend=max.at.gaf, yend=10), colour='black', linetype="dashed", size=0.1)
+  #+ geom_line(mapping = aes(y=Kuma.Alt.score, colour="red")) + geom_segment(aes(x=max.at.Kuma, y= -10, xend=max.at.Kuma, yend=10), colour='black', linetype="dashed", size=0.1)
   plot.1 <- ggplot(snp, mapping = aes(x=1:nrow(snp))) + geom_line(mapping = aes(y=Alt.score, colour="Alt")) + geom_line(mapping = aes(y=Ref.score, colour="Ref")) + labs(x="motif index", y="PWM.score")
   plot.2 <- ggplot(snp, mapping = aes(x=1:nrow(snp), y=Delta)) + geom_line() + labs(x="motif index", y="Delta.PWM.score")
   if (toupper(method)=="KUMA" | toupper(method) =="BOTH"){
-    if (max(snp$Gaf.Ref.score) > max(snp$Gaf.Alt.score)){
-      max.at.gaf <- which(snp$Gaf.Ref.score == max(snp$Gaf.Ref.score))
+    if (max(snp$Kuma.Ref.score) > max(snp$Kuma.Alt.score)){
+      max.at.Kuma <- which(snp$Kuma.Ref.score == max(snp$Kuma.Ref.score))
     } else{
-      max.at.gaf <- which(snp$Gaf.Alt.score == max(snp$Gaf.Alt.score))
+      max.at.Kuma <- which(snp$Kuma.Alt.score == max(snp$Kuma.Alt.score))
     }
-    plot.3 <- ggplot(snp, mapping = aes(x=1:nrow(snp))) + geom_line(mapping = aes(y=Gaf.Alt.score, colour="Alt"))  + geom_line(mapping = aes(y=Gaf.Ref.score, colour="Ref")) + labs(x="motif index", y="Gaf.score")
-    plot.4 <- ggplot(snp, mapping = aes(x=1:nrow(snp), y=Gaf.Delta)) + geom_line() + labs(x="motif index", y="Delta.Gaf.score")
+    plot.3 <- ggplot(snp, mapping = aes(x=1:nrow(snp))) + geom_line(mapping = aes(y=Kuma.Alt.score, colour="Alt"))  + geom_line(mapping = aes(y=Kuma.Ref.score, colour="Ref")) + labs(x="motif index", y="Kuma.score")
+    plot.4 <- ggplot(snp, mapping = aes(x=1:nrow(snp), y=Kuma.Delta)) + geom_line() + labs(x="motif index", y="Delta.Kuma.score")
     return(plot_grid(plot.1, plot.2, plot.3, plot.4, labels = "auto", align = "h"))
   }
   return(plot_grid(plot.1, plot.2, labels = "auto", align = "h"))
