@@ -26,6 +26,7 @@ Granges object with columns:
 \item{Snp.loc}{Location in the motif sequence where variant occurs}
 \item{Sequence}{Reference sequence matched with motif}
 \item{MotifDB}{which motif database was used}
+\item{provider}{which provider name motif is from}
 \item{Motif}{The motif analysed}
 \item{Ref.score}{PWM compared score for Reference}
 \item{Alt.score}{PWM compared score for Alternative}

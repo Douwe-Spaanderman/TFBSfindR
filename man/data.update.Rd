@@ -29,7 +29,9 @@ dataframe with the following columns:
 \item{ALT}{Alternative nucleotide}
 \item{Snp.loc}{Location of SNP on sequence}
 \item{Sequence}{Reference sequence matched with motif}
-\item{MotifDB}{Motif found in sequence}
+\item{MotifDB}{which motif database was used}
+\item{provider}{which provider name motif is from}
+\item{Motif}{The motif analysed}
 \item{Ref.score}{PWM compared score for Reference}
 \item{Alt.score}{PWM compared score for Alternative}
 \item{Delta.score}{Alt.score - Ref.score}

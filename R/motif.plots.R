@@ -23,6 +23,9 @@ snp.plot <- function(snp, method='both', motif="MEF2A", strand=c("-", "+")){
   #library(ggplot2)
   #library(cowplot)
 
+  #Because CMD check
+  Alt.score <- Ref.score <- Delta <- Kuma.Alt.score <- Kuma.Ref.score <- Kuma.Delta <- NULL
+
   if(length(motif) > 1){
     stop("please provide only one motif to analyse")
   }

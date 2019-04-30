@@ -21,6 +21,7 @@
 #' \item{Snp.loc}{Location in the motif sequence where variant occurs}
 #' \item{Sequence}{Reference sequence matched with motif}
 #' \item{MotifDB}{which motif database was used}
+#' \item{provider}{which provider name motif is from}
 #' \item{Motif}{The motif analysed}
 #' \item{Ref.score}{PWM compared score for Reference}
 #' \item{Alt.score}{PWM compared score for Alternative}
@@ -60,7 +61,7 @@ GRanges.update <- function(data, threshold=1, pseudocount = 0.01){
   }
   if(!(is.null(data.c))){
     data <- unlist(GRangesList(data.c))
-    data <- data[, c("Sample","SNP","Allel","REF","ALT","Snp.loc","Sequence","MotifDB","Motif","Ref.score","Alt.score","Delta.score","Kuma.ref.score","Kuma.alt.score","Kuma.delta.score")]
+    data <- data[, c("Sample","SNP","Allel","REF","ALT","Snp.loc","Sequence","MotifDB","provider","Motif","Ref.score","Alt.score","Delta.score","Kuma.ref.score","Kuma.alt.score","Kuma.delta.score")]
     return(data)
   }
 }
@@ -135,7 +136,9 @@ Window.update <- function(data, digits=3){
 #' \item{ALT}{Alternative nucleotide}
 #' \item{Snp.loc}{Location of SNP on sequence}
 #' \item{Sequence}{Reference sequence matched with motif}
-#' \item{MotifDB}{Motif found in sequence}
+#' \item{MotifDB}{which motif database was used}
+#' \item{provider}{which provider name motif is from}
+#' \item{Motif}{The motif analysed}
 #' \item{Ref.score}{PWM compared score for Reference}
 #' \item{Alt.score}{PWM compared score for Alternative}
 #' \item{Delta.score}{Alt.score - Ref.score}

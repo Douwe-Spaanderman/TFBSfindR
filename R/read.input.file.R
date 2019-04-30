@@ -31,11 +31,11 @@
 #'
 #' @import Biostrings
 #' @import VariantAnnotation
-#' @import matrixStats
 #' @import GenomicRanges
 #' @import IRanges
 #' @import S4Vectors
 #' @import GenomeInfoDb
+#' @importFrom SummarizedExperiment rowRanges
 #'
 #' @export
 read.input.file <- function(input.file, ref.genome, sample.name='Unknown', ATAC.only=FALSE){
@@ -85,8 +85,9 @@ read.input.file <- function(input.file, ref.genome, sample.name='Unknown', ATAC.
     #library(matrixStats)
     genome <- genome(ref.genome)
     data <- readVcf(input.file, genome)
-    rowRanges(data)$Allel <- geno(data)$GT
+    phased.data <- geno(data)$GT
     data <- rowRanges(data)
+    data$Allel <- phased.data
     data$ALT <- unlist(data$ALT)
     data <- keepStandardChromosomes(data)
     data <- data[!(seqnames(data) == "chrX")]

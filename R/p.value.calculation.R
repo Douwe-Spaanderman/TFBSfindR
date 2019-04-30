@@ -31,7 +31,7 @@ p.value.calculation <- function(data, motiflist, background=c(A=0.25, C=0.25, G=
   pwms <- SimpleList(lapply(motiflist, to.PWM, type=motif.type, background=background, pseudocount=pseudocount))
 
   data <- dplyr::bind_rows(by(data, 1:nrow(data), function(x, motifs){
-    motif.name <- paste("JASPAR_CORE", as.character(x["Motif"][[1]]), sep = "-")
+    motif.name <- paste(as.character(x["MotifDB"][[1]]), as.character(x["Motif"][[1]]), as.character(x["provider"][[1]]), sep = "-")
     motif <- motifs[[which(grepl(motif.name, names(motifs)))]]
     x['pvalue.REF'] <- TFMPvalue::TFMsc2pv(motif, as.numeric(x['Ref.score'][[1]]), type = "PWM")
     x['pvalue.ALT'] <- TFMPvalue::TFMsc2pv(motif, as.numeric(x['Alt.score'][[1]]), type = "PWM")
