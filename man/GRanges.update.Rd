@@ -4,7 +4,7 @@
 \alias{GRanges.update}
 \title{GRanges.update}
 \usage{
-GRanges.update(data, threshold = 0.1)
+GRanges.update(data, threshold = 1, pseudocount = 0.01)
 }
 \arguments{
 \item{data}{is a single Granges object from \code{TFBS.findR}}
@@ -12,6 +12,9 @@ GRanges.update(data, threshold = 0.1)
 \item{threshold}{which Delta Kumasaka score should meet.
 This will make sure that less relavant changes in motif
 scores will not be reported}
+
+\item{pseudocount}{in order to make sure that no -inf values
+occur when Kuma score is negative for either ref or alt}
 }
 \value{
 Granges object with columns:

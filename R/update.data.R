@@ -9,6 +9,8 @@
 #' @param threshold which Delta Kumasaka score should meet.
 #' This will make sure that less relavant changes in motif
 #' scores will not be reported
+#' @param pseudocount in order to make sure that no -inf values
+#' occur when Kuma score is negative for either ref or alt
 #'
 #' @return Granges object with columns:
 #' \item{Sample}{which is the sample.name passed as param}
@@ -30,8 +32,9 @@
 #' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 #'
 #' @export
-GRanges.update <- function(data, threshold=0.1){
-  Delta.Kuma <- data$Kuma.alt.score[[1]] - data$Kuma.ref.score[[1]]
+GRanges.update <- function(data, threshold=1, pseudocount = 0.01){
+  Delta.Kuma <- log2((data$Kuma.alt.score[[1]] + pseudocount) / (data$Kuma.ref.score[[1]] + pseudocount))
+  Delta.Kuma[which(!is.finite(Delta.Kuma))] <- 0
   pwm.length <- 40-length(Delta.Kuma)
   data.c <- c()
   j <- 1
@@ -45,7 +48,7 @@ GRanges.update <- function(data, threshold=0.1){
       i.data$Kuma.ref.score <- i.data$Kuma.ref.score[[1]][i]
       i.data$Kuma.alt.score <- i.data$Kuma.alt.score[[1]][i]
       i.data$Kuma.delta.score <- i.Delta.Kuma
-      if(i.data$Kuma.delta.score > threshold | i.data$Kuma.delta.score < -threshold){
+      if(i.data$Kuma.delta.score > threshold){
         i.data$Sequence <- subseq(i.data$REF.sequence, start=i, end=(i+pwm.length))
         start(ranges(i.data)) <- start(ranges(i.data)) + i - 1
         end(ranges(i.data)) <- start(ranges(i.data)) + pwm.length
@@ -117,6 +120,8 @@ Window.update <- function(data, digits=3){
 #' @param threshold which Delta Kumasaka score should meet.
 #' This will make sure that less relavant changes in motif
 #' scores will not be reported
+#' @param pseudocount in order to make sure that no -inf values
+#' occur when Kuma score is negative for either ref or alt
 #'
 #' @return dataframe with the following columns:
 #' \item{seqnames}{Chromsome}
@@ -141,9 +146,9 @@ Window.update <- function(data, digits=3){
 #' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 #'
 #' @export
-data.update <- function(data, threshold=0.1){
+data.update <- function(data, threshold=1, pseudocount=0.01){
   #Update the GrangesList object
-  data <- unlist(GRangesList(unlist(lapply(data, GRanges.update, threshold=threshold), use.names = FALSE)), use.names = FALSE)
+  data <- unlist(GRangesList(unlist(lapply(data, GRanges.update, threshold=threshold, pseudocount=pseudocount))), use.names = FALSE)
   data <- data[order(data$Kuma.delta.score, decreasing=TRUE)]
   data <- Window.update(data)
   return(data)

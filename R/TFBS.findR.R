@@ -155,12 +155,13 @@ pwm.compare <- function(pwm, data){
 #' Note that the amount of GrangesObject are also *amount of pwms,
 #' as a score list is provided for each individual pwm
 #'
+#' @import S4Vectors
 #' @export
 analyse.pwm <- function(data, motiflist, motif.type="PFM", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.01){
   #Add names to pwms
   for (i in 1:length(motiflist)){
     names(motiflist[[i]]) <- names(motiflist[i])
-    names(motiflist[[i]])[2] <- mcols(JASPARCORE)$sequenceCount[i]
+    names(motiflist[[i]])[2] <- mcols(motiflist)$sequenceCount[i]
   }
   #Changing motifs to PWMs
   pwms <- SimpleList(lapply(motiflist, to.PWM, type=motif.type, background=background, pseudocount=pseudocount))
@@ -289,12 +290,13 @@ kumasaka.score <- function(data, background=c(A=0.25, C=0.25, G=0.25, T=0.25), p
 #' \item{Kuma.alt.score}{list of posterior probability of transcription
 #' factor binding score for each position and motif to Alt.sequence}
 #'
+#' @import BiocParallel
 #' @export
 TFBS.findR <- function(data, motiflist, motif.type="PFM", method="both", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.01, prior=0.1, BPPARAM=bpparam()){
   #Analyse pwms on occurence of motifs
-  data <- unlist(GRangesList(bplapply(data, analyse.pwm, motiflist=JASPARCORE,
+  data <- unlist(GRangesList(bplapply(data, analyse.pwm, motiflist=motiflist,
                                       motif.type=motif.type, background=background,
-                                      pseudocount=pseudocount, BPPARAM=bpparam)), use.names = FALSE)
+                                      pseudocount=pseudocount, BPPARAM=BPPARAM)), use.names = FALSE)
   if (toupper(method)=="KUMA" | toupper(method) =="BOTH"){
     #Calculating Kumasaka score
     data <- unlist(GRangesList(lapply(data, kumasaka.score, background=background, prior=prior)), use.names=FALSE)

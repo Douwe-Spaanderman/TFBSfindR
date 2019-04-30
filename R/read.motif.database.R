@@ -6,6 +6,7 @@
 #'
 #' @return a SimpleList with motif matrixes
 #'
+#' @import S4Vectors
 #' @export
 read.motif.database <- function(file){
   data <- readLines(file)

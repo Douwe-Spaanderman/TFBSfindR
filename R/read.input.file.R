@@ -32,6 +32,11 @@
 #' @import Biostrings
 #' @import VariantAnnotation
 #' @import matrixStats
+#' @import GenomicRanges
+#' @import IRanges
+#' @import S4Vectors
+#' @import GenomeInfoDb
+#'
 #' @export
 read.input.file <- function(input.file, ref.genome, sample.name='Unknown', ATAC.only=FALSE){
   if (length(grep(".fasta", input.file)) == 1){
@@ -77,6 +82,7 @@ read.input.file <- function(input.file, ref.genome, sample.name='Unknown', ATAC.
   }
   if (length(grep(".vcf", input.file)) == 1){
     #library(VariantAnnotation)
+    #library(matrixStats)
     genome <- genome(ref.genome)
     data <- readVcf(input.file, genome)
     rowRanges(data)$Allel <- geno(data)$GT

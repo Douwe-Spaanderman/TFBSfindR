@@ -9,13 +9,12 @@ Description: TFBSfindR analysis sequences in vcf or fasta files
     and reference scores for TF binding are compared to investigate
     variants that change these TFBS, either by desrupting a motif or
     by creating one.
-VignetteBuilder: knitr
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
 Imports: Biostrings, VariantAnnotation, cowplot, ggplot2, GenomicRanges, 
         rtracklayer, BiocParallel, S4Vectors, IRanges, dplyr, matrixStats,
-        knitr
+        knitr, TFMPvalue, XVector, GenomeInfoDb, stats, tcltk
 Suggests: MotifDb, BSgenome.Hsapiens.UCSC.hg19
 BugReports: https://github.com/Douwe-Spaanderman/TFBSfindR/issues
