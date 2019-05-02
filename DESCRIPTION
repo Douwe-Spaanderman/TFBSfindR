@@ -9,6 +9,7 @@ Description: TFBSfindR analysis sequences in vcf or fasta files
     and reference scores for TF binding are compared to investigate
     variants that change these TFBS, either by desrupting a motif or
     by creating one.
+VignetteBuilder: knitr
 Encoding: UTF-8
 License: GPL-3 | file LICENSE
 LazyData: true

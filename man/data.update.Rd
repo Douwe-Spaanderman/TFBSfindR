@@ -4,7 +4,8 @@
 \alias{data.update}
 \title{data.update}
 \usage{
-data.update(data, threshold = 1, pseudocount = 0.01)
+data.update(data, threshold = 1, pseudocount = 0.01,
+  BPPARAM = bpparam())
 }
 \arguments{
 \item{data}{is a single Granges object from \code{TFBS.findR}}
@@ -15,6 +16,10 @@ scores will not be reported}
 
 \item{pseudocount}{in order to make sure that no -inf values
 occur when Kuma score is negative for either ref or alt}
+
+\item{BPPARAM}{are settings by BiocParallel, which can be used
+to do multiple core calculations. bpparam() are the current settings
+on your system.}
 }
 \value{
 dataframe with the following columns:

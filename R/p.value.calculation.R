@@ -2,6 +2,9 @@
 #'
 #' Touzet et al., 2007, created a method for calculating
 #' pvalues for PWMs
+#' https://almob.biomedcentral.com/articles/10.1186/1748-7188-2-15
+#' https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0480-5
+#'
 #'
 #' @param data is a Grangesobject from \code{update.data.R}
 #' @param motiflist is a simplelist of motifs

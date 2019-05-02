@@ -123,6 +123,9 @@ Window.update <- function(data, digits=3){
 #' scores will not be reported
 #' @param pseudocount in order to make sure that no -inf values
 #' occur when Kuma score is negative for either ref or alt
+#' @param BPPARAM are settings by BiocParallel, which can be used
+#' to do multiple core calculations. bpparam() are the current settings
+#' on your system.
 #'
 #' @return dataframe with the following columns:
 #' \item{seqnames}{Chromsome}
@@ -148,10 +151,11 @@ Window.update <- function(data, digits=3){
 #' factor binding for Alternative}
 #' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 #'
+#' @import BiocParallel
 #' @export
-data.update <- function(data, threshold=1, pseudocount=0.01){
+data.update <- function(data, threshold=1, pseudocount=0.01, BPPARAM=bpparam()){
   #Update the GrangesList object
-  data <- unlist(GRangesList(unlist(lapply(data, GRanges.update, threshold=threshold, pseudocount=pseudocount))), use.names = FALSE)
+  data <- unlist(GRangesList(unlist(bplapply(data, GRanges.update, threshold=threshold, pseudocount=pseudocount, BPPARAM=BPPARAM))), use.names = FALSE)
   data <- data[order(data$Kuma.delta.score, decreasing=TRUE)]
   data <- Window.update(data)
   return(data)

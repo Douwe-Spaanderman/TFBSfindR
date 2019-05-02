@@ -52,12 +52,12 @@ ref.genome <- BSgenome.Hsapiens.UCSC.hg19
 ```
 
 Finally, we give our sample a name, which can be anything, and read the input file and output a GRangesobject. ATAC.only can be used to filter variants in FASTA of there presence in ATAC peaks. In order to do these filter steps, ATAC.only needs to be a string with the location of a BED file, which consists of variants present in ATAC data. For now, we set ATAC.only to FALSE as it is set as default.
-read.input.file outputs a GRangesobject with sample.name, rs number, allel (*|* if phased information is not provided), reference and alternative nucleotide and their sequences including 20 nucleotides before and after the variant.
+read.input.file outputs a GRangesobject with sample.name, rs number, allel, reference and alternative nucleotide and their sequences including 20 nucleotides before and after the variant.
 
 ```{r read.data, message=FALSE, warning=FALSE, cache=TRUE}
 sample.name <- "example.dataset"
 data <- read.input.file(input=data, ref.genome=ref.genome, sample.name = sample.name, ATAC.only = FALSE)
-data
+head(data)
 ```
 
 ## Step 2| Motif selection
@@ -80,7 +80,7 @@ motifs
 
 ## Step 3| Motif analysis
 
-Here the motifs from JASPARCORE are compared to our variants ...
+In Step 3, the motifs from JASPARCORE are compared to our variants provided earlier. Several
 
 ```{r analyse.PWM, message=FALSE, warning=FALSE, cache=TRUE}
 data <- TFBS.findR(data, motiflist=JASPARCORE, motif.type="PPM", pseudocount="log.of.reads", prior=0.1, BPPARAM = bpparam)
@@ -95,8 +95,23 @@ snp <- data[data$SNP %in% "rs113663169"]
 snp.plot(snp, method="both", motif="TFAP2A", strand="+")
 ```
 
-```{r update.window}
+update to data.frame
+
+```{r update.window, warning=FALSE, cache=TRUE}
 data <- data.update(data)
+head(data)
+```
+
+## Extra p-value calculations
+
+Pvalue calculations can be done as follows
+
+```{r inthemeantime, include=FALSE}
+data <- data[1:5,]
+```
+
+```{r p.value.calculations, message=FALSE, warning=FALSE, cache=TRUE}
+data <- p.value.calculation(data, motiflist=JASPARCORE, background=c(A=0.25, C=0.25, G=0.25, T=0.25), motif.type="PPM", pseudocount="log.of.reads")
 head(data)
 ```
 
