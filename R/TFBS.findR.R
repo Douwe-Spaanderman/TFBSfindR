@@ -125,7 +125,7 @@ pwm.compare <- function(pwm, data){
   }
 
   data$MotifDB <- pwm.name[2]
-  data$provider <- pwm.name[4]
+  data$provider <- pwm.name[length(pwm.name)]
   data$Motif <- pwm.name[3]
   data$Ref.score <- list(pwm.ref)
   data$Alt.score <- list(pwm.alt)

@@ -33,7 +33,7 @@
 #' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 #'
 #' @export
-GRanges.update <- function(data, threshold=1, pseudocount = 0.01){
+GRanges.update <- function(data, threshold=2, pseudocount = 0.01){
   Delta.Kuma <- log2((data$Kuma.alt.score[[1]] + pseudocount) / (data$Kuma.ref.score[[1]] + pseudocount))
   Delta.Kuma[which(!is.finite(Delta.Kuma))] <- 0
   pwm.length <- 40-length(Delta.Kuma)
@@ -49,7 +49,7 @@ GRanges.update <- function(data, threshold=1, pseudocount = 0.01){
       i.data$Kuma.ref.score <- i.data$Kuma.ref.score[[1]][i]
       i.data$Kuma.alt.score <- i.data$Kuma.alt.score[[1]][i]
       i.data$Kuma.delta.score <- i.Delta.Kuma
-      if(i.data$Kuma.delta.score > threshold){
+      if(abs(i.data$Kuma.delta.score) > threshold){
         i.data$Sequence <- subseq(i.data$REF.sequence, start=i, end=(i+pwm.length))
         start(ranges(i.data)) <- start(ranges(i.data)) + i - 1
         end(ranges(i.data)) <- start(ranges(i.data)) + pwm.length
@@ -153,7 +153,7 @@ Window.update <- function(data, digits=3){
 #'
 #' @import BiocParallel
 #' @export
-data.update <- function(data, threshold=1, pseudocount=0.01, BPPARAM=bpparam()){
+data.update <- function(data, threshold=2, pseudocount=0.01, BPPARAM=bpparam()){
   #Update the GrangesList object
   data <- unlist(GRangesList(unlist(bplapply(data, GRanges.update, threshold=threshold, pseudocount=pseudocount, BPPARAM=BPPARAM))), use.names = FALSE)
   data <- data[order(data$Kuma.delta.score, decreasing=TRUE)]

@@ -4,7 +4,7 @@
 \alias{data.update}
 \title{data.update}
 \usage{
-data.update(data, threshold = 1, pseudocount = 0.01,
+data.update(data, threshold = 2, pseudocount = 0.01,
   BPPARAM = bpparam())
 }
 \arguments{

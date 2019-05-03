@@ -4,7 +4,7 @@
 \alias{GRanges.update}
 \title{GRanges.update}
 \usage{
-GRanges.update(data, threshold = 1, pseudocount = 0.01)
+GRanges.update(data, threshold = 2, pseudocount = 0.01)
 }
 \arguments{
 \item{data}{is a single Granges object from \code{TFBS.findR}}
