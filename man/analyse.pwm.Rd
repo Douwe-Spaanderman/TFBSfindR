@@ -4,23 +4,14 @@
 \alias{analyse.pwm}
 \title{analyse.pwm}
 \usage{
-analyse.pwm(data, motiflist, motif.type = "PFM", background = c(A =
-  0.25, C = 0.25, G = 0.25, T = 0.25), pseudocount = 0.01)
+analyse.pwm(data, pwms)
 }
 \arguments{
 \item{data}{is a single Grangesobject from \code{read.input.file}}
 
-\item{motiflist}{is a simplelist which include several (at least 2)
+\item{pwms}{is a simplelist which include several (at least 2)
 motifs which are position weight matrices, position probabilty matrices or
 position frequency matrices.}
-
-\item{motif.type}{is the type of matrices passed in motiflist. Can be "PFM",
-"PCM", "PPM", "PWM".}
-
-\item{background}{is the background probability for each nucleotide.}
-
-\item{pseudocount}{value to change the outcome model, which removes
-possibility for -inf values.}
 }
 \value{
 GrangesObject with added columns:

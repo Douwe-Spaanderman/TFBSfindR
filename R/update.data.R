@@ -6,9 +6,8 @@
 #' that have low scores, making them less relevant.
 #'
 #' @param data is a single Granges object from \code{TFBS.findR}
-#' @param threshold which Delta Kumasaka score should meet.
-#' This will make sure that less relavant changes in motif
-#' scores will not be reported
+#' @param method can be used to determine if kumasaka score will be
+#' calculated.
 #' @param pseudocount in order to make sure that no -inf values
 #' occur when Kuma score is negative for either ref or alt
 #'
@@ -33,35 +32,48 @@
 #' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 #'
 #' @export
-GRanges.update <- function(data, threshold=2, pseudocount = 0.01){
-  Delta.Kuma <- log2((data$Kuma.alt.score[[1]] + pseudocount) / (data$Kuma.ref.score[[1]] + pseudocount))
-  Delta.Kuma[which(!is.finite(Delta.Kuma))] <- 0
-  pwm.length <- 40-length(Delta.Kuma)
+GRanges.update <- function(data, pseudocount = 0.01, method="both"){
+  pwm.length <- 40-length(data$Ref.score[[1]])
   data.c <- c()
   j <- 1
-  for(i in 1:length(Delta.Kuma)){
-    i.Delta.Kuma <- Delta.Kuma[i]
-    if (!(i.Delta.Kuma == 0)){
+  for(i in 1:length(data$Ref.score[[1]])){
+    if(((data$Ref.score[[1]][i] - data$Alt.score[[1]][i]) != 0) & (data$Ref.score[[1]][i] > 0 | data$Alt.score[[1]][i] > 0)){
       i.data <- data
       i.data$Ref.score <- i.data$Ref.score[[1]][i]
       i.data$Alt.score <- i.data$Alt.score[[1]][i]
       i.data$Delta.score <- i.data$Alt.score - i.data$Ref.score
-      i.data$Kuma.ref.score <- i.data$Kuma.ref.score[[1]][i]
-      i.data$Kuma.alt.score <- i.data$Kuma.alt.score[[1]][i]
-      i.data$Kuma.delta.score <- i.Delta.Kuma
-      if(abs(i.data$Kuma.delta.score) > threshold){
-        i.data$Sequence <- subseq(i.data$REF.sequence, start=i, end=(i+pwm.length))
-        start(ranges(i.data)) <- start(ranges(i.data)) + i - 1
-        end(ranges(i.data)) <- start(ranges(i.data)) + pwm.length
-        i.data$Snp.loc <- 22 - i
-        data.c[j] <- list(i.data)
-        j <- j + 1
+      if (toupper(method)=="KUMA" | toupper(method)=="BOTH"){
+        i.data$Kuma.ref.score <- i.data$Kuma.ref.score[[1]][i]
+        i.data$Kuma.alt.score <- i.data$Kuma.alt.score[[1]][i]
+        i.data$Kuma.delta.score <- log2((i.data$Kuma.alt.score + pseudocount) / (i.data$Kuma.ref.score + pseudocount))
       }
+      if (toupper(method)=="PVALUE" | toupper(method)=="BOTH"){
+        i.data$Pvalue.ref.score <- i.data$Pvalue.ref.score[[1]][i]
+        i.data$Pvalue.alt.score <- i.data$Pvalue.alt.score[[1]][i]
+      }
+      i.data$Sequence <- subseq(i.data$REF.sequence, start=i, end=(i+pwm.length))
+      start(ranges(i.data)) <- start(ranges(i.data)) + i - 1
+      end(ranges(i.data)) <- start(ranges(i.data)) + pwm.length
+      i.data$Snp.loc <- 22 - i
+      data.c[j] <- list(i.data)
+      j <- j + 1
     }
   }
   if(!(is.null(data.c))){
     data <- unlist(GRangesList(data.c))
-    data <- data[, c("Sample","SNP","Allel","REF","ALT","Snp.loc","Sequence","MotifDB","provider","Motif","Ref.score","Alt.score","Delta.score","Kuma.ref.score","Kuma.alt.score","Kuma.delta.score")]
+
+    if (toupper(method)=="KUMA"){
+      data <- data[, c("Sample","SNP","Allel","REF","ALT","Snp.loc","Sequence","MotifDB","provider","Motif","Ref.score","Alt.score","Delta.score","Kuma.ref.score","Kuma.alt.score","Kuma.delta.score")]
+    }
+    if (toupper(method)=="PVALUE"){
+      data <- data[, c("Sample","SNP","Allel","REF","ALT","Snp.loc","Sequence","MotifDB","provider","Motif","Ref.score","Alt.score","Delta.score","Pvalue.ref.score","Pvalue.alt.score","Kuma.delta.score")]
+    }
+    if (toupper(method)=="BOTH"){
+      data <- data[, c("Sample","SNP","Allel","REF","ALT","Snp.loc","Sequence","MotifDB","provider","Motif","Ref.score","Alt.score","Delta.score","Kuma.ref.score","Kuma.alt.score","Kuma.delta.score","Pvalue.ref.score","Pvalue.alt.score")]
+    }
+    if (toupper(method)=="KUMA" & toupper(method)=="PVALUE" & toupper(method)=="BOTH"){
+      data <- data[, c("Sample","SNP","Allel","REF","ALT","Snp.loc","Sequence","MotifDB","provider","Motif","Ref.score","Alt.score","Delta.score")]
+    }
     return(data)
   }
 }
@@ -103,7 +115,7 @@ Window.update <- function(data, digits=3){
   numeric.columns <- sapply(data, mode) == 'numeric'
   data[numeric.columns] <- round(data[numeric.columns], digits = digits)
   names(data)[8] <- 'Allel'
-  data <- data[order(abs(data$Kuma.delta.score), decreasing=TRUE),]
+  data <- data[order(data$Delta.score, decreasing=TRUE),]
   rownames(data) <- 1:length(data[,1])
   return(data)
 }
@@ -118,11 +130,10 @@ Window.update <- function(data, digits=3){
 #' to a dataframe.
 #'
 #' @param data is a single Granges object from \code{TFBS.findR}
-#' @param threshold which Delta Kumasaka score should meet.
-#' This will make sure that less relavant changes in motif
-#' scores will not be reported
 #' @param pseudocount in order to make sure that no -inf values
 #' occur when Kuma score is negative for either ref or alt
+#' @param method can be used to determine if kumasaka score will be
+#' calculated.
 #' @param BPPARAM are settings by BiocParallel, which can be used
 #' to do multiple core calculations. bpparam() are the current settings
 #' on your system.
@@ -153,10 +164,9 @@ Window.update <- function(data, digits=3){
 #'
 #' @import BiocParallel
 #' @export
-data.update <- function(data, threshold=2, pseudocount=0.01, BPPARAM=bpparam()){
+data.update <- function(data, pseudocount=0.01, method="both", BPPARAM=bpparam()){
   #Update the GrangesList object
-  data <- unlist(GRangesList(unlist(bplapply(data, GRanges.update, threshold=threshold, pseudocount=pseudocount, BPPARAM=BPPARAM))), use.names = FALSE)
-  data <- data[order(data$Kuma.delta.score, decreasing=TRUE)]
+  data <- unlist(GRangesList(unlist(bplapply(data, GRanges.update, pseudocount=pseudocount, method=method, BPPARAM=BPPARAM))), use.names = FALSE)
   data <- Window.update(data)
   return(data)
 }

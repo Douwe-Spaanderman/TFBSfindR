@@ -36,10 +36,10 @@ to.PWM <- function(x, type="PFM", background=c(A=0.25, C=0.25, G=0.25, T=0.25), 
     if(pseudocount == "log.of.reads"){
       sequenceCount <- sum(x[,1])
       pseudocount <- log(sequenceCount)
-      pwm <- log((x+pseudocount*background)/((sequenceCount+pseudocount)*background))
+      pwm <- log2((x+pseudocount*background)/((sequenceCount+pseudocount)*background))
     } else{
       x <- x/sum(x[,1])
-      pwm <- log((x + (pseudocount*background))/((1 + pseudocount)*background))
+      pwm <- log2((x + (pseudocount*background))/((1 + pseudocount)*background))
     }
   }
   if(toupper(type) == "PPM"){
@@ -47,9 +47,9 @@ to.PWM <- function(x, type="PFM", background=c(A=0.25, C=0.25, G=0.25, T=0.25), 
       sequenceCount <- as.numeric(names(x)[2])
       x <- x*sequenceCount
       pseudocount <- log(sequenceCount)
-      pwm <- log((x+pseudocount*background)/((sequenceCount+pseudocount)*background))
+      pwm <- log2((x+pseudocount*background)/((sequenceCount+pseudocount)*background))
     } else{
-      pwm <- log((x+(pseudocount*background))/((1+pseudocount)*background))
+      pwm <- log2((x+(pseudocount*background))/((1+pseudocount)*background))
     }
   }
   if(toupper(type) == "PWM"){
@@ -138,14 +138,9 @@ pwm.compare <- function(pwm, data){
 #' This is only to do analyses in loop for each motif in motiflist.
 #'
 #' @param data is a single Grangesobject from \code{read.input.file}
-#' @param motiflist is a simplelist which include several (at least 2)
+#' @param pwms is a simplelist which include several (at least 2)
 #' motifs which are position weight matrices, position probabilty matrices or
 #' position frequency matrices.
-#' @param motif.type is the type of matrices passed in motiflist. Can be "PFM",
-#' "PCM", "PPM", "PWM".
-#' @param background is the background probability for each nucleotide.
-#' @param pseudocount value to change the outcome model, which removes
-#' possibility for -inf values.
 #'
 #' @return GrangesObject with added columns:
 #' \item{Ref.score}{list of PWM compared score for each position
@@ -157,15 +152,7 @@ pwm.compare <- function(pwm, data){
 #'
 #' @import S4Vectors
 #' @export
-analyse.pwm <- function(data, motiflist, motif.type="PFM", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.01){
-  #Add names to pwms
-  for (i in 1:length(motiflist)){
-    names(motiflist[[i]]) <- names(motiflist[i])
-    names(motiflist[[i]])[2] <- mcols(motiflist)$sequenceCount[i]
-  }
-  #Changing motifs to PWMs
-  pwms <- SimpleList(lapply(motiflist, to.PWM, type=motif.type, background=background, pseudocount=pseudocount))
-
+analyse.pwm <- function(data, pwms){
   #Comparing sequence to PMWs
   data <- unlist(GRangesList(lapply(pwms, pwm.compare, data=data)), use.names = FALSE)
 }
@@ -219,22 +206,73 @@ kumasaka.score <- function(data, background=c(A=0.25, C=0.25, G=0.25, T=0.25), p
   for(i in 1:length(data$Ref.score[[1]])){
     x.Ref <- data$Ref.score[[1]][i]
     x.Alt <- data$Alt.score[[1]][i]
-
-    if (x.Ref < 0){
+    if(((x.Ref - x.Alt) == 0) | (x.Ref <= 0 & x.Alt <= 0)) {
       Ref.score[i] <- 0
-    } else{
-      Ref.score[i] <- (prior*x.Ref)/(((1-prior)*background.score)+(prior*x.Ref))
-    }
-
-    if (x.Alt < 0){
       Alt.score[i] <- 0
     } else{
-      Alt.score[i] <- (prior*x.Alt)/(((1-prior)*background.score)+(prior*x.Alt))
+      if (x.Ref < 0){
+        Ref.score[i] <- 0
+      } else{
+        Ref.score[i] <- (prior*x.Ref)/(((1-prior)*background.score)+(prior*x.Ref))
+      }
+
+      if (x.Alt < 0){
+        Alt.score[i] <- 0
+      } else{
+        Alt.score[i] <- (prior*x.Alt)/(((1-prior)*background.score)+(prior*x.Alt))
+      }
     }
   }
 
   data$Kuma.ref.score <- list(Ref.score)
   data$Kuma.alt.score <- list(Alt.score)
+  return(data)
+}
+
+#' p.value.calculation
+#'
+#' Touzet et al., 2007, created a method for calculating
+#' pvalues for PWMs
+#' https://almob.biomedcentral.com/articles/10.1186/1748-7188-2-15
+#' https://genomebiology.biomedcentral.com/articles/10.1186/s13059-014-0480-5
+#'
+#'
+#' @param data is a Grangesobject from \code{update.data.R}
+#' @param pwms is a simplelist of motifs
+#' @param background is the background probability for each nucleotide.
+#'
+#' @return Grangesobject with added columns:
+#' \item{Pvalue.ref.score}{Pvalue of transcription factor binding score
+#' for each position and motif to Ref.sequence}
+#' \item{Pvalue.alt.score}{Pvalue of transcription factor binding score
+#' for each position and motif to Alt.sequence}
+#'
+#' @import TFMPvalue
+#' @import S4Vectors
+#' @export
+p.value.calculation <- function(data, pwms, background=c(A=0.25, C=0.25, G=0.25, T=0.25)){
+  #Calculating pvalue | CURRENTLY NOT WORKING FOR SOME MOTIFS
+  motif.name <- paste(as.character(data$MotifDB), as.character(data$Motif), sep = "-")
+  motif <- pwms[which(grepl(motif.name, names(pwms)))]
+  motif <- motif[[which(grepl(as.character(data$provider), names(motif)))]]
+  if(data$Motif == "ESR2" | data$Motif == "CTCF" | data$Motif == "ESR1" | data$Motif == "REST" | data$Motif == "PPARG" | data$Motif == "STAT1"){
+    data$Pvalue.ref.score <- list(rep(0, length(data$Ref.score[[1]])))
+    data$Pvalue.alt.score <- list(rep(0, length(data$Alt.score[[1]])))
+    return(data)
+  }
+  pvalue.REF <- c()
+  pvalue.ALT <- c()
+  for(i in 1:length(data$Ref.score[[1]])){
+    if(((data$Ref.score[[1]][i] - data$Alt.score[[1]][i]) == 0) | (data$Ref.score[[1]][i] <= 0 & data$Alt.score[[1]][i] <= 0)) {
+      pvalue.REF[i] <- 0
+      pvalue.ALT[i] <- 0
+    } else{
+      pvalue.REF[i] <- TFMsc2pv(motif, as.numeric(data$Ref.score[[1]][i]), bg = background, type = "PWM")
+      pvalue.ALT[i] <- TFMsc2pv(motif, as.numeric(data$Alt.score[[1]][i]), bg = background, type = "PWM")
+    }
+  }
+  data$Pvalue.ref.score <- list(pvalue.REF)
+  data$Pvalue.alt.score <- list(pvalue.ALT)
   return(data)
 }
 
@@ -293,13 +331,24 @@ kumasaka.score <- function(data, background=c(A=0.25, C=0.25, G=0.25, T=0.25), p
 #' @import BiocParallel
 #' @export
 TFBS.findR <- function(data, motiflist, motif.type="PFM", method="both", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.01, prior=0.1, BPPARAM=bpparam()){
+  #Pass name to motiflist in order to loop
+  for (i in 1:length(motiflist)){
+    names(motiflist[[i]]) <- names(motiflist[i])
+    names(motiflist[[i]])[2] <- mcols(motiflist)$sequenceCount[i]
+  }
+  #Changing motifs to PWMs
+  pwms <- SimpleList(lapply(motiflist, to.PWM, type=motif.type, background=background, pseudocount=pseudocount))
+
   #Analyse pwms on occurence of motifs
-  data <- unlist(GRangesList(bplapply(data, analyse.pwm, motiflist=motiflist,
-                                      motif.type=motif.type, background=background,
-                                      pseudocount=pseudocount, BPPARAM=BPPARAM)), use.names = FALSE)
-  if (toupper(method)=="KUMA" | toupper(method) =="BOTH"){
+  data <- unlist(GRangesList(bplapply(data, analyse.pwm, pwms=pwms, BPPARAM=BPPARAM)), use.names = FALSE)
+
+  if (toupper(method)=="KUMA" | toupper(method)=="BOTH"){
     #Calculating Kumasaka score
-    data <- unlist(GRangesList(lapply(data, kumasaka.score, background=background, prior=prior)), use.names=FALSE)
+    data <- unlist(GRangesList(bplapply(data, kumasaka.score, background=background, prior=prior, BPPARAM=BPPARAM)), use.names=FALSE)
+  }
+  if (toupper(method)=="PVALUE" | toupper(method)=="BOTH"){
+    #Calculating Pvalue
+    data <- unlist(GRangesList(bplapply(data, p.value.calculation, pwms=pwms, background=background, BPPARAM=BPPARAM)), use.names=FALSE)
   }
   return(data)
 }
