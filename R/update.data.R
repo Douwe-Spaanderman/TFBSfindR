@@ -83,7 +83,6 @@ GRanges.update <- function(data, pseudocount = 0.01, method="both"){
 #' Update data to a dataframe rather than Granges object
 #'
 #' @param data is a Granges object from \code{GRanges.update}
-#' @param digits number of digits to round off
 #'
 #' @return dataframe with the following columns:
 #' \item{seqnames}{Chromsome}
@@ -108,12 +107,12 @@ GRanges.update <- function(data, pseudocount = 0.01, method="both"){
 #' \item{Kuma.delta.score}{Kuma.alt.score - Kuma.ref.score}
 #'
 #' @export
-Window.update <- function(data, digits=3){
+Window.update <- function(data){
   data <- as.data.frame(row.names = 1:length(data), data)
   data$seqnames <- as.character(data$seqnames)
   data$strand <- as.character(data$strand)
-  numeric.columns <- sapply(data, mode) == 'numeric'
-  data[numeric.columns] <- round(data[numeric.columns], digits = digits)
+  #numeric.columns <- sapply(data, mode) == 'numeric'
+  #data[numeric.columns] <- round(data[numeric.columns], digits = digits)
   names(data)[8] <- 'Allel'
   data <- data[order(data$Delta.score, decreasing=TRUE),]
   rownames(data) <- 1:length(data[,1])

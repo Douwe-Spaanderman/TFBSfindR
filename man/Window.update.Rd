@@ -4,12 +4,10 @@
 \alias{Window.update}
 \title{Window.update}
 \usage{
-Window.update(data, digits = 3)
+Window.update(data)
 }
 \arguments{
 \item{data}{is a Granges object from \code{GRanges.update}}
-
-\item{digits}{number of digits to round off}
 }
 \value{
 dataframe with the following columns:
