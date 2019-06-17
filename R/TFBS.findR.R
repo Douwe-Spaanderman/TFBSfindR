@@ -1,3 +1,45 @@
+#' trim.motifs
+#'
+#' Function to trim certain motifs because of inability to calcalate p-value
+#' otherwise
+#'
+#' THIS SHOULD BE UNNESCESSARY! however no reaction on git from Ge-Tan
+#'
+#' @param motif is a single item from motiflist
+#'
+#' @return trimed specific motifs
+#'
+#' @export
+trim.motifs <- function(motif){
+  motif.name <- strsplit(names(motif), split="-")[[1]][3]
+  motif <- motif[[1]]
+  if(motif.name == "CTCF"){
+    motif <- motif[,3:18]
+    colnames(motif) <- 1:ncol(motif)
+  }
+  if(motif.name == "STAT1"){
+    motif <- motif[,1:12]
+    colnames(motif) <- 1:ncol(motif)
+  }
+  if(motif.name == "PPARG"){
+    motif <- motif[,2:18]
+    colnames(motif) <- 1:ncol(motif)
+  }
+  if(motif.name == "REST"){
+    motif <- motif[,2:17]
+    colnames(motif) <- 1:ncol(motif)
+  }
+  if(motif.name == "ESR1"){
+    motif <- motif[,5:19]
+    colnames(motif) <- 1:ncol(motif)
+  }
+  if(motif.name == "ESR2"){
+    motif <- motif[,2:16]
+    colnames(motif) <- 1:ncol(motif)
+  }
+  return(motif)
+}
+
 #' to.PWM
 #'
 #' Function to change position frequency matrix/position count matrix or
@@ -255,11 +297,11 @@ p.value.calculation <- function(data, pwms, background=c(A=0.25, C=0.25, G=0.25,
   motif.name <- paste(as.character(data$MotifDB), as.character(data$Motif), sep = "-")
   motif <- pwms[which(grepl(motif.name, names(pwms)))]
   motif <- motif[[which(grepl(as.character(data$provider), names(motif)))]]
-  if(data$Motif == "ESR2" | data$Motif == "CTCF" | data$Motif == "ESR1" | data$Motif == "REST" | data$Motif == "PPARG" | data$Motif == "STAT1"){
-    data$Pvalue.ref.score <- list(rep(0, length(data$Ref.score[[1]])))
-    data$Pvalue.alt.score <- list(rep(0, length(data$Alt.score[[1]])))
-    return(data)
-  }
+  #if(data$Motif == "ESR2" | data$Motif == "CTCF" | data$Motif == "ESR1" | data$Motif == "REST" | data$Motif == "PPARG" | data$Motif == "STAT1"){
+  #  data$Pvalue.ref.score <- list(rep(0, length(data$Ref.score[[1]])))
+  #  data$Pvalue.alt.score <- list(rep(0, length(data$Alt.score[[1]])))
+  #  return(data)
+  #}
   pvalue.REF <- c()
   pvalue.ALT <- c()
   for(i in 1:length(data$Ref.score[[1]])){
@@ -332,7 +374,8 @@ p.value.calculation <- function(data, pwms, background=c(A=0.25, C=0.25, G=0.25,
 #' @export
 TFBS.findR <- function(data, motiflist, motif.type="PFM", method="both", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.01, prior=0.1, BPPARAM=bpparam()){
   #Pass name to motiflist in order to loop
-  for (i in 1:length(motiflist)){
+  for(i in 1:length(motiflist)){
+    motiflist[[i]] <- trim.motifs(motiflist[i])
     names(motiflist[[i]]) <- names(motiflist[i])
     names(motiflist[[i]])[2] <- mcols(motiflist)$sequenceCount[i]
   }

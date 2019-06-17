@@ -5,7 +5,7 @@
 \title{read.input.file}
 \usage{
 read.input.file(input.file, ref.genome, sample.name = "Unknown",
-  ATAC.only = FALSE)
+  ranges.filter = FALSE, chr.filter = FALSE)
 }
 \arguments{
 \item{input.file}{is the path to a file, which can be both a vcf and fasta file.
@@ -16,8 +16,11 @@ Totally fine if these are zipped.}
 \item{sample.name}{which is self explanitory, usefull if you want to codense several
 outcomes of different samples in a later stage}
 
-\item{ATAC.only}{can be used to pass a bed file which only has the alterations in an
-ATAC peak. Based on this bed file, the alterations in input.file will be filtered.}
+\item{ranges.filter}{can be used to pass a bed file which only has the alterations in an
+Granges object. Based on this bed file, the alterations in input.file will be filtered.}
+
+\item{chr.filter}{can be used to filter based on a specific chromosome, can also be a list
+of chromosomes.}
 }
 \value{
 a GrangesObject with following columns:
@@ -40,6 +43,6 @@ library(BSgenome.Hsapiens.UCSC.hg19)
 ref.genome <- BSgenome.Hsapiens.UCSC.hg19
 #Get sample.name from input file
 sample.name <- "example.dataset"
-data <- read.input.file(input, ref.genome, sample.name = sample.name, ATAC.only = FALSE)
+data <- read.input.file(input, ref.genome, sample.name = sample.name, ranges.filter = FALSE, chr.filter=FALSE)
 
 }

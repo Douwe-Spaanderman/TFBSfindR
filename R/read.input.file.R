@@ -7,8 +7,10 @@
 #' @param ref.genome is the reference genome used to get IRanges and sequence information.
 #' @param sample.name which is self explanitory, usefull if you want to codense several
 #' outcomes of different samples in a later stage
-#' @param ATAC.only can be used to pass a bed file which only has the alterations in an
-#' ATAC peak. Based on this bed file, the alterations in input.file will be filtered.
+#' @param ranges.filter can be used to pass a bed file which only has the alterations in an
+#' Granges object. Based on this bed file, the alterations in input.file will be filtered.
+#' @param chr.filter can be used to filter based on a specific chromosome, can also be a list
+#' of chromosomes.
 #'
 #' @return a GrangesObject with following columns:
 #' \item{Sample}{which is the sample.name passed as param}
@@ -27,7 +29,7 @@
 #' ref.genome <- BSgenome.Hsapiens.UCSC.hg19
 #' #Get sample.name from input file
 #' sample.name <- "example.dataset"
-#' data <- read.input.file(input, ref.genome, sample.name = sample.name, ATAC.only = FALSE)
+#' data <- read.input.file(input, ref.genome, sample.name = sample.name, ranges.filter = FALSE, chr.filter=FALSE)
 #'
 #' @import Biostrings
 #' @import VariantAnnotation
@@ -38,7 +40,7 @@
 #' @importFrom SummarizedExperiment rowRanges
 #'
 #' @export
-read.input.file <- function(input.file, ref.genome, sample.name='Unknown', ATAC.only=FALSE){
+read.input.file <- function(input.file, ref.genome, sample.name='Unknown', ranges.filter=FALSE, chr.filter=FALSE){
   if (length(grep(".fasta", input.file)) == 1){
     #library(Biostrings)
     data <- readDNAStringSet(filepath = input.file)
@@ -67,10 +69,14 @@ read.input.file <- function(input.file, ref.genome, sample.name='Unknown', ATAC.
     data <- data.ref[,!(names(mcols(data.ref)) == "Ref.Alt")]
     names(data) <- data$SNP
 
-    if(!(ATAC.only == FALSE)){
-      warning("removing snps not in ATAC data")
-      OCR <- rtracklayer::import.bed(ATAC.only)
-      data <- data[queryHits(findOverlaps(data, OCR))]
+    if(chr.filter != FALSE){
+      data <- data[seqnames(data) %in% chr.filter]
+    }
+
+    if(ranges.filter != FALSE){
+      warning("removing snps not in bed data")
+      filter <- rtracklayer::import.bed(ranges.filter)
+      data <- data[queryHits(findOverlaps(data, filter))]
       data <- unique(data)
     }
     #To make fasta and vcf the same
@@ -99,10 +105,14 @@ read.input.file <- function(input.file, ref.genome, sample.name='Unknown', ATAC.
     #Remove non SNPs
     data <- data[which(nchar(data$Alteration) == 3)]
 
-    if(!(ATAC.only == FALSE)){
-      warning("removing snps not in ATAC data")
-      OCR <- rtracklayer::import.bed(ATAC.only)
-      data <- data[queryHits(findOverlaps(data, OCR))]
+    if(chr.filter != FALSE){
+      data <- data[seqnames(data) %in% chr.filter]
+    }
+
+    if(ranges.filter != FALSE){
+      warning("removing snps not in bed data")
+      filter <- rtracklayer::import.bed(ranges.filter)
+      data <- data[queryHits(findOverlaps(data, filter))]
       data <- unique(data)
     }
 
