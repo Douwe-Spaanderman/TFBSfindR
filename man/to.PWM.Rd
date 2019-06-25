@@ -5,7 +5,7 @@
 \title{to.PWM}
 \usage{
 to.PWM(x, type = "PFM", background = c(A = 0.25, C = 0.25, G = 0.25, T
-  = 0.25), pseudocount = 0.01)
+  = 0.25), pseudocount = 0.8)
 }
 \arguments{
 \item{x}{is a GrangesObject from \code{read.input.file}}

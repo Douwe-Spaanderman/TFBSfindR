@@ -6,7 +6,7 @@
 \usage{
 TFBS.findR(data, motiflist, motif.type = "PFM", method = "both",
   background = c(A = 0.25, C = 0.25, G = 0.25, T = 0.25),
-  pseudocount = 0.01, prior = 0.1, BPPARAM = bpparam())
+  pseudocount = 0.8, prior = 0.1, BPPARAM = bpparam())
 }
 \arguments{
 \item{data}{is a GRangesobject from \code{read.input.file}}

@@ -68,7 +68,7 @@ trim.motifs <- function(motif){
 #' @return transformed matrix of x based on the method selected
 #'
 #' @export
-to.PWM <- function(x, type="PFM", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.01){
+to.PWM <- function(x, type="PFM", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.8){
   #PWM calculations are done as https://academic.oup.com/nar/article/31/20/6016/1039515
   #Pseudocount is set to 0.01 because of https://academic.oup.com/nar/article/37/3/939/1074640
   #Pseudocount can also be calculated with log(sequenceCount) using log.of.reads for pseudocount
@@ -372,7 +372,7 @@ p.value.calculation <- function(data, pwms, background=c(A=0.25, C=0.25, G=0.25,
 #'
 #' @import BiocParallel
 #' @export
-TFBS.findR <- function(data, motiflist, motif.type="PFM", method="both", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.01, prior=0.1, BPPARAM=bpparam()){
+TFBS.findR <- function(data, motiflist, motif.type="PFM", method="both", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount=0.8, prior=0.1, BPPARAM=bpparam()){
   #Pass name to motiflist in order to loop
   for(i in 1:length(motiflist)){
     motiflist[[i]] <- trim.motifs(motiflist[i])

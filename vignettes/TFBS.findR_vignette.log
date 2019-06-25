@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.12)  30 APR 2019 16:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2018.10.12)  25 JUN 2019 11:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**/tmp/RtmpLHXsiF/preview-80f5d00358a.dir/TFBS.findR_vignette.tex
-(/tmp/RtmpLHXsiF/preview-80f5d00358a.dir/TFBS.findR_vignette.tex
+**/tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vignette.tex
+(/tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vignette.tex
 LaTeX2e <2016/02/01>
 Babel <3.9q> and hyphenation patterns for 3 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
@@ -1256,54 +1256,79 @@ LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <10> not available
 \openout6 = `TFBS.findR_vignette.toc'.
 
 [2]
-LaTeX Font Info:    Try loading font information for T1+fvm on input line 162.
+LaTeX Font Info:    Try loading font information for T1+fvm on input line 172.
 (/usr/share/texlive/texmf-dist/tex/latex/bera/t1fvm.fd
 File: t1fvm.fd 2004/09/07 scalable font definitions for T1/fvm.
 )
 LaTeX Font Info:    Font shape `T1/fvm/m/n' will be
-(Font)              scaled to size 7.98004pt on input line 162.
-[3] [4]
-</tmp/RtmpLHXsiF/preview-80f5d00358a.dir/TFBS.findR_vignette_files/figure-latex
-/plot.example-1.pdf, id=87, 569.12625pt x 353.32pt>
-File: /tmp/RtmpLHXsiF/preview-80f5d00358a.dir/TFBS.findR_vignette_files/figure-
-latex/plot.example-1.pdf Graphic file (type pdf)
+(Font)              scaled to size 7.98004pt on input line 172.
+[3]
+LaTeX Font Info:    Font shape `T1/fvm/m/it' in size <10> not available
+(Font)              Font shape `T1/fvm/m/sl' tried instead on input line 215.
+LaTeX Font Info:    Font shape `T1/fvm/m/sl' will be
+(Font)              scaled to size 7.98004pt on input line 215.
+[4] [5] [6]
+</tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vignette_files/figure-late
+x/plot.example-1.pdf, id=116, 572.1375pt x 353.32pt>
+File: /tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vignette_files/figure
+-latex/plot.example-1.pdf Graphic file (type pdf)
 
-<use /tmp/RtmpLHXsiF/preview-80f5d00358a.dir/TFBS.findR_vignette_files/figure-l
-atex/plot.example-1.pdf>
-Package pdftex.def Info: /tmp/RtmpLHXsiF/preview-80f5d00358a.dir/TFBS.findR_vig
-nette_files/figure-latex/plot.example-1.pdf used on input line 301.
-(pdftex.def)             Requested size: 341.44365pt x 211.97206pt.
-[5 </tmp/RtmpLHXsiF/preview-80f5d00358a.dir/TFBS.findR_vignette_files/figure-la
-tex/plot.example-1.pdf>] [6] [7]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 444.
-[8]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 444.
+<use /tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vignette_files/figure-
+latex/plot.example-1.pdf>
+Package pdftex.def Info: /tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vi
+gnette_files/figure-latex/plot.example-1.pdf used on input line 369.
+(pdftex.def)             Requested size: 341.43436pt x 210.8507pt.
+[7] [8 </tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vignette_files/figu
+re-latex/plot.example-1.pdf>] [9]
+</tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vignette_files/figure-late
+x/plot.variant-1.pdf, id=144, 572.1375pt x 349.305pt>
+File: /tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vignette_files/figure
+-latex/plot.variant-1.pdf Graphic file (type pdf)
+
+<use /tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vignette_files/figure-
+latex/plot.variant-1.pdf>
+Package pdftex.def Info: /tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vi
+gnette_files/figure-latex/plot.variant-1.pdf used on input line 467.
+(pdftex.def)             Requested size: 341.43436pt x 208.45465pt.
+[10 </tmp/RtmpC5EicY/preview-8bfb53e5df9c.dir/TFBS.findR_vignette_files/figure-
+latex/plot.variant-1.pdf>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 544.
+[11]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 544.
 (./TFBS.findR_vignette.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 444.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 444.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 544.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 544.
 Package rerunfilecheck Info: File `TFBS.findR_vignette.out' has not changed.
-(rerunfilecheck)             Checksum: 53C9E344D4A2EC62CC6B2410C6AC62D8;574.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 444.
+(rerunfilecheck)             Checksum: 639F16327A859F699432D953984081AC;677.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 544.
  ) 
 Here is how much of TeX's memory you used:
- 13827 strings out of 494953
- 210615 string characters out of 6180976
- 339508 words of memory out of 5000000
- 16740 multiletter control sequences out of 15000+600000
- 78137 words of font info for 80 fonts, out of 8000000 for 9000
+ 13873 strings out of 494953
+ 211538 string characters out of 6180976
+ 341642 words of memory out of 5000000
+ 16751 multiletter control sequences out of 15000+600000
+ 80069 words of font info for 95 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 43i,13n,45p,1156b,393s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/share/texmf/
-fonts/enc/dvips/lm/lm-ec.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/
-bera/fvmr8a.pfb></usr/share/texmf/fonts/type1/public/lm/lmss10.pfb></usr/share/
-texmf/fonts/type1/public/lm/lmss8.pfb></usr/share/texmf/fonts/type1/public/lm/l
-mssbo10.pfb></usr/share/texmf/fonts/type1/public/lm/lmssbx10.pfb></usr/share/te
-xlive/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-
-dist/fonts/type1/urw/helvetic/uhvr8a.pfb>
-Output written on TFBS.findR_vignette.pdf (8 pages, 130106 bytes).
+ 43i,14n,45p,1157b,417s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf/fonts/en
+c/dvips/lm/lm-rm.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/s
+hare/texmf/fonts/enc/dvips/lm/lm-mathex.enc}{/usr/share/texlive/texmf-dist/font
+s/enc/dvips/base/8r.enc}{/usr/share/texmf/fonts/enc/dvips/lm/lm-ec.enc}</usr/sh
+are/texlive/texmf-dist/fonts/type1/public/bera/fvmr8a.pfb></usr/share/texlive/t
+exmf-dist/fonts/type1/public/bera/fvmro8a.pfb></usr/share/texmf/fonts/type1/pub
+lic/lm/lmex10.pfb></usr/share/texmf/fonts/type1/public/lm/lmmi10.pfb></usr/shar
+e/texmf/fonts/type1/public/lm/lmmi7.pfb></usr/share/texmf/fonts/type1/public/lm
+/lmr10.pfb></usr/share/texmf/fonts/type1/public/lm/lmr7.pfb></usr/share/texmf/f
+onts/type1/public/lm/lmss10.pfb></usr/share/texmf/fonts/type1/public/lm/lmss8.p
+fb></usr/share/texmf/fonts/type1/public/lm/lmssbo10.pfb></usr/share/texmf/fonts
+/type1/public/lm/lmssbx10.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pf
+b></usr/share/texmf/fonts/type1/public/lm/lmsy7.pfb></usr/share/texlive/texmf-d
+ist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist/fonts/ty
+pe1/urw/helvetic/uhvr8a.pfb>
+Output written on TFBS.findR_vignette.pdf (11 pages, 223273 bytes).
 PDF statistics:
- 152 PDF objects out of 1000 (max. 8388607)
- 121 compressed objects within 2 object streams
- 27 named destinations out of 1000 (max. 500000)
- 10318 words of extra memory for PDF output out of 12000 (max. 10000000)
+ 229 PDF objects out of 1000 (max. 8388607)
+ 182 compressed objects within 2 object streams
+ 34 named destinations out of 1000 (max. 500000)
+ 10339 words of extra memory for PDF output out of 12000 (max. 10000000)
 

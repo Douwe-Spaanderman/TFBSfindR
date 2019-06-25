@@ -3,11 +3,12 @@ title: "TFBSfindR: Variant analysis of Transcription Factor Binding Sites"
 author:
 - name: Douwe J. Spaanderman
   affiliation:
-  - Division of Gene Regulation, the Netherlands Cancer Institute
+  - Division of Gene Regulation, de Wit E. Group, the Netherlands Cancer Institute
 date: "`r format(Sys.time(), '%d %B %Y')`"
 output:
   BiocStyle::pdf_document
 abstract: |
+  TFBSfindR investigates changes between Transcription Factor (TFs) binding sites in single nucleotide polymorphisms. TFBSfindR uses several methods to calculate changes in TF motifs, first calculating Position Weight Matrixes scores for both reference and variant. Secondly, two methods can be assessed for the identification of important variants, suggested by Kumasaka et al. 2019 and Touzet et al. 2007, TFBSfindR also comes with some plot functions for single variant score analysis.
   
   \newpage
   
@@ -25,6 +26,13 @@ bpparam = MulticoreParam(workers=1)
 ```
 
 # Introduction
+This document offers an introduction for using TFBSfindR for the identification of Transcription Factor (TF) binding sites in a variant dataset. Using surrounding reference seqeunce, input transcription factor motifs are compared for their likeness score to the reference and variant sequence. This Motif score is calculate by the use of Position Weight Matrixes (PWMs), using the sum of this log probability matrix. Position Weight Matrixes are widely used for representing Transcription Factor binding motifs and are computed using either Position Probability Matrixes (PPM) or Position Frequency Matrixes (PFM). All three of these Matrixes can be retrieved from well known TF Motif databases like Hocomoco !!LINK!! and Jaspar !!LINK!!. TFBSfindR works with all three, calculating PWM using log probability as suggested by Hocomoco !!LINK!!.
+
+Following PWM score calculations, TFBSfindR can be used for analysing motifs based on two additional scores. First kumusaka et al., suggested calculating motif binding based on the prior probability of a transcription factor binding. Secondly, TFBSfindR uses p-value calculation by Touzet et al. 2007, in order to discover pvalue differences in the reference and variant.
+
+Lastly, in the last segment we will discus method of identifying important variants from either the Kumusaka score as well as with the p-value calculations.
+
+https://almob.biomedcentral.com/articles/10.1186/1748-7188-2-15
 
 # Using TFBSfindR: A quick overview
 Here TFBSfindR is run in its most simplified way. Analysing the example variant dataset provided with TFBSfindR.
@@ -36,9 +44,11 @@ data <- read.input.file(input=data, ref.genome = BSgenome.Hsapiens.UCSC.hg19)
 data <- TFBS.findR(data, motiflist=MotifDb)
 ```
 
+\newpage
+
 # In depth overview
 ## Step 1| Object initialization
-Here we look more into detail in TFBSfindR and it's customizable functions. First we select the example variant dataset provided with TFBSfindR.
+Here we look more into detail in TFBSfindR and it's customizable functions. First we select the example variant dataset provided with TFBSfindR. Either a fasta file or a vcf file should be provided for TFBSfindR in order to read the format.
 
 ```{r load.data, message=FALSE, warning=FALSE, cache=TRUE}
 library(TFBSfindR)
@@ -46,17 +56,18 @@ data <- system.file("extdata", "variant.dataset.fasta" , package = "TFBSfindR")
 ```
 
 Next, we select the reference genome, we want to compare the variant data to. 
+
 ```{r load.genome, message=FALSE, warning=FALSE, cache=TRUE}
 library(BSgenome.Hsapiens.UCSC.hg19)
 ref.genome <- BSgenome.Hsapiens.UCSC.hg19
 ```
 
-Finally, we give our sample a name, which can be anything, and read the input file and output a GRangesobject. ATAC.only can be used to filter variants in FASTA of there presence in ATAC peaks. In order to do these filter steps, ATAC.only needs to be a string with the location of a BED file, which consists of variants present in ATAC data. For now, we set ATAC.only to FALSE as it is set as default.
-read.input.file outputs a GRangesobject with sample.name, rs number, allel, reference and alternative nucleotide and their sequences including 20 nucleotides before and after the variant.
+Finally, we give our sample a name, which can be anything, and read the input file and output a GRangesobject. ranges.filter can be used to filter variants in GRangesobject of there presence in these ranges peaks. In order to do these filter steps, ranges.filter needs to be a string with the location in a BED file, which consists of variants present in ATAC data. For now, we set ranges.filter to FALSE as it is set as default. Additionally, single or multiple chromosomes can be exclusively be selected for using chr.filter, which is set to FALSE as default.
+read.input.file outputs a GRangesobject with sample.name, rs number, allel, reference and alternative nucleotide and their sequences including 20 nucleotides before and after the variant, which is for the longest TF motif.
 
 ```{r read.data, message=FALSE, warning=FALSE, cache=TRUE}
 sample.name <- "example.dataset"
-data <- read.input.file(input=data, ref.genome=ref.genome, sample.name = sample.name, ATAC.only = FALSE)
+data <- read.input.file(input=data, ref.genome=ref.genome, sample.name = sample.name, ranges.filter=FALSE, chr.filter=FALSE)
 head(data)
 ```
 
@@ -70,7 +81,7 @@ JASPARCORE <- query(JASPARCORE, 'hsapiens')
 JASPARCORE
 ```
 
-Additionally in our library we provide the hocomoco core position count matrix in text format. This is an example, on how to provide your own motif database (currently only possible in .txt).
+Additionally in our library we provide the hocomoco core position count matrix in text format. This is an example, on how to provide your own motif database, which is currently only compatible in .txt file.
 
 ```{r, get.database2, message=FALSE, warning=FALSE, cache=TRUE}
 motifs <- system.file("extdata", "hocomoco.core.txt" , package = "TFBSfindR")
@@ -80,39 +91,100 @@ motifs
 
 ## Step 3| Motif analysis
 
-In Step 3, the motifs from JASPARCORE are compared to our variants provided earlier. Several
+The motifs from JASPARCORE are compared to our variants provided earlier. In the JASPARCORE dataset, motifs are provided as a Position Probability Matrix (PPM). The initial step of TFBS.findR is transforming the motif matrix provided to a Position Weight Matrix. A Position Frequency Matrix (PFM), Position Probability Matrix and ofcourse Position Weight Matrix (PWM) can be provided. the PFM is a frequency matrix with the nucleotide identified on set position on the TF read. Here for all we visualize the motif for TF GATA3, derived from Jaspar.
+$$
+PFM = 
+\begin{array}{rrrr}A \\ C \\ G \\ T
+\end{array}
+\left[\begin{array}
+{rrrrrrr}
+15 & 4 & 41 & 36 & 7 & 19 & 3 \\
+11 & 35 & 1 & 2 & 29 & 14 & 22 \\
+10 & 2 & 1 & 4 & 6 & 7 & 15 \\
+7 & 2 & 0 & 1 & 1 & 3 & 3
+\end{array}\right]
+$$
+A PPM is a probability matrix rather than a frequency matrix as follows:
+$$
+PPM = \begin{array}{rrrr}A \\ C \\ G \\ T
+\end{array}
+\left[\begin{array}
+{rrrrrrr}
+0.35 & 0.09 & 0.95 & 0.84 & 0.16 & 0.44 & 0.07 \\
+0.26 & 0.81 & 0.02 & 0.05 & 0.67 & 0.33 & 0.51 \\
+0.23 & 0.05 & 0.02 & 0.09 & 0.14 & 0.16 & 0.35 \\
+0.16 & 0.05 & 0.00 & 0.02 & 0.02 & 0.07 & 0.07
+\end{array}\right]
+$$
+The position weight matrix is calculated by using the following equation:
+$$PWM = \frac{log((PFM_i,_j+pseudocount_i,_j*background)}{((sequenceCount_i,_j+pseudocount_i,_j)*background))}$$
+In which sequenceCount is the number of reads used for the identification of our motif: $sequenceCount_i,_j = \sum_{i=1}^{n}$. The pseudocount is added to eliminate the possibility of infinite values in the equation. In general, smaller pseudocounts have been shown to improve PWM analysis as shown by Nishida et al., 2009, suggesting a pseudocount 0.8 (which is our default). Here we calculate the pseudocount, as done by Papatsenko et al., 2003, using: $pseudocount_i,_j = log(sequenceCount_i,_j)$. The background is a matrix with the probability for each nucleotide, such as $A=0.25, C=0.25, G=0.25, T=0.25$. 
+
+$$
+PWM = \begin{array}{rrrr}A \\ C \\ G \\ T
+\end{array}
+\left[\begin{array}
+{rrrrrrr}
+0.31 & -0.86 & 1.28 & 1.15 & -0.39 & 0.53 & -1.09 \\
+0.02 & 1.12 & -1.78 & -1.38 & 0.94 & 0.25 &  0.67 \\
+-0.07 & -1.38 & -1.80 & -0.86 & -0.52 & -0.39 &  0.31 \\
+-0.39 & -1.38 & -2.52 & -1.80 & -1.80 & -1.09 & -1.09 
+\end{array}\right]
+$$
+
+Next, the score for a sequence is calculated using the sum of this log probability matrix. This is simply done by comparing set positions to the motif both for the variant and reference using an shifting window approach, calculating a PWM score for every position it will cover the variant in the 41 nucleotide sequence.
+$$PWM.score = \sum_{i = 1}^{m}M(i, u_{i})$$
+For both the variant and the reference, motif alterations for all posible positions are calculated.
+
+Depending on the method selected, Kumusaka score and/or Pvalue can be calculated. Providing both as we have done here, will logically provided both these values for the variant.
+
+The Kumasaka score is a posterior probability of a transcription factor binding. The following equation is used for calculating this score:
+$$p(TF binding|sequence) = \frac{\pi PWM_{1}}{(1-\pi) PWM_{0} + \pi PWM_{1}}$$
+In which $PWM_{1}$ is the score for the motif given in the sequence for either the variant or reference. $PWM_{0}$ is the PWM score with the background probability (i.e. 0.25 for all nucleotides). The prior is set to the False discovery rate, in our case 0.1. 
+
+The pvalue is currently computed using an external package TFMPvalue. The pvalue calculation is achieved by first calculating the score distribution. first the probability that the background model can achieve a score equal to $\alpha$ for a specific matrix (M) is defined as $Q(M, \alpha)$. If $s$ is not an accessible score then $Q(M, s) = 0$. $Q$ is calculated using ||WORK IN PROGRESS||
+Using this equation, a pvalue can be obtained with the relation:
+$$Pvalue(M,\alpha) = \sum_{s \ge \alpha}Q(M,s)$$
+Lastly, in TFBS.findR bbparam can be assessed to determine the number of workers (cores) to use for this process. Note that currently, the script is not optomized for memory usage, spliting on multiple cores will create double required memory capacity.
 
 ```{r analyse.PWM, message=FALSE, warning=FALSE, cache=TRUE}
-data <- TFBS.findR(data, motiflist=JASPARCORE, motif.type="PPM", pseudocount="log.of.reads", prior=0.1, BPPARAM = bpparam)
+data <- TFBS.findR(data, motiflist=JASPARCORE, motif.type="PPM", method="both", background=c(A=0.25, C=0.25, G=0.25, T=0.25), pseudocount="log.of.reads", prior=0.1, BPPARAM = bpparam)
 ```
 
 # Data analysis
 
-some plots ...
+Here we can visualize a specific variant for the scores on the shifting window. Note that Kuma score is excluded for negative values, as calculations are impossible if PWM < 0. Delta PWM scores are depicted on the right for both the Kuma and PWM score.
 
 ```{r plot.example, message=FALSE, warning=FALSE, cache=TRUE}
 snp <- data[data$SNP %in% "rs113663169"]
 snp.plot(snp, method="both", motif="TFAP2A", strand="+")
 ```
 
-update to data.frame
+# Readable dataframe
+
+Lastly, the GRangesobject provides a score for each position of the sequence and is difficult to interpert. Here, we provide a cleaner way to create a dataframe output, which select the highest position score without further filtering. Note that it is important to provide the same method as provided with TFBS.findR.
 
 ```{r update.window, warning=FALSE, cache=TRUE}
-data <- data.update(data)
+data <- data.update(data, pseudocount=0.01, method="both", BPPARAM=bpparam)
 head(data)
 ```
 
-## Extra p-value calculations
+# Further filtering | Preliminary from here
 
-Pvalue calculations can be done as follows
+Currently filtering is set to pvalue 0.001, still have to discuss what the best method is for Kuma
 
-```{r inthemeantime, include=FALSE}
-data <- data[1:5,]
+```{r filtering, warning=FALSE, cache=TRUE}
+thres <- 0.001
+
+data <- data[(data$Pvalue.alt.score <= thres & data$Pvalue.ref.score > thres) | (data$Pvalue.alt.score > thres & data$Pvalue.ref.score <= thres),]
+head(data)
 ```
 
-```{r p.value.calculations, message=FALSE, warning=FALSE, cache=TRUE}
-data <- p.value.calculation(data, motiflist=JASPARCORE, background=c(A=0.25, C=0.25, G=0.25, T=0.25), motif.type="PPM", pseudocount="log.of.reads")
-head(data)
+# Variant plot
+
+```{r plot.variant, warning=FALSE, cache=TRUE}
+snp <- data[data$SNP == "rs58092391",]
+variant.plot(snp, JASPARCORE)
 ```
 
 # SessionInfo

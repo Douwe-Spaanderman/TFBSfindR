@@ -16,6 +16,7 @@ LazyData: true
 RoxygenNote: 6.1.1
 Imports: Biostrings, VariantAnnotation, cowplot, ggplot2, GenomicRanges, 
         rtracklayer, BiocParallel, S4Vectors, IRanges, dplyr, matrixStats,
-        knitr, TFMPvalue, XVector, GenomeInfoDb, stats, tcltk, SummarizedExperiment
+        knitr, TFMPvalue, XVector, GenomeInfoDb, stats, tcltk, SummarizedExperiment,
+        ggrepel, gridExtra
 Suggests: MotifDb, BSgenome.Hsapiens.UCSC.hg19
 BugReports: https://github.com/Douwe-Spaanderman/TFBSfindR/issues
